@@ -1,0 +1,230 @@
+# Copyright (C) 2024 bPlugins LLC
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: Features Request 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/features-request\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-04-18T13:50:51+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.9.0\n"
+"X-Domain: features-request\n"
+
+#. Plugin Name of the plugin
+#: inc/class-fereq-admin-menu-add.php:82
+#: inc/class-fereq-admin-menu-add.php:83
+msgid "Features Request"
+msgstr ""
+
+#. Description of the plugin
+msgid "Using this you can share your experience or request a feature."
+msgstr ""
+
+#. Author of the plugin
+msgid "bPlugins LLC"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://bplugins.com"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:177
+#: inc/class-fereq-admin-menu-add.php:356
+msgid "Serial No"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:180
+msgid "Report Type"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:183
+msgid "Report Title"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:186
+msgid "Report Email"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:189
+msgid "Reported Plugin"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:192
+msgid "Report Status"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:195
+#: inc/class-fereq-admin-menu-add.php:362
+msgid "Action"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:359
+msgid "Plugin Name"
+msgstr ""
+
+#: dist/editor.js:1
+#: dist/editor.js:1588
+msgid "Vertical"
+msgstr ""
+
+#: dist/editor.js:1
+#: dist/editor.js:1589
+msgid "Horizontal"
+msgstr ""
+
+#: dist/editor.js:1
+#: dist/editor.js:1593
+msgid "General"
+msgstr ""
+
+#: dist/editor.js:1
+#: dist/editor.js:1594
+msgid "Style"
+msgstr ""
+
+#: dist/editor.js:1664
+msgid "Add or Remove Items"
+msgstr ""
+
+#: dist/editor.js:1668
+msgid "Number:"
+msgstr ""
+
+#: dist/editor.js:1670
+msgid "Text:"
+msgstr ""
+
+#: dist/editor.js:1674
+msgid "Remove"
+msgstr ""
+
+#: dist/editor.js:1676
+msgid "Duplicate"
+msgstr ""
+
+#: dist/editor.js:1681
+msgid "Add New Card"
+msgstr ""
+
+#: dist/editor.js:1686
+msgid "Component Settings"
+msgstr ""
+
+#: dist/editor.js:1687
+#: dist/editor.js:1689
+msgid "Toggle?"
+msgstr ""
+
+#: dist/editor.js:1692
+msgid "Layout:"
+msgstr ""
+
+#: dist/editor.js:1699
+#: dist/editor.js:1734
+msgid "Some settings may change when layout will be changed."
+msgstr ""
+
+#: dist/editor.js:1706
+msgid "Width:"
+msgstr ""
+
+#: dist/editor.js:1707
+msgid "Keep width 0, to auto width."
+msgstr ""
+
+#: dist/editor.js:1711
+msgid "Custom Components"
+msgstr ""
+
+#: dist/editor.js:1713
+msgid "Columns:"
+msgstr ""
+
+#: dist/editor.js:1718
+msgid "Column Gap:"
+msgstr ""
+
+#: dist/editor.js:1720
+msgid "Row Gap:"
+msgstr ""
+
+#: dist/editor.js:1722
+msgid "Enter Image URL"
+msgstr ""
+
+#: dist/editor.js:1727
+msgid "Position:"
+msgstr ""
+
+#: dist/editor.js:1740
+msgid "Custom Style"
+msgstr ""
+
+#: dist/editor.js:1741
+msgid "Background:"
+msgstr ""
+
+#: dist/editor.js:1743
+msgid "Typography:"
+msgstr ""
+
+#: dist/editor.js:1745
+msgid "Color:"
+msgstr ""
+
+#: dist/editor.js:1749
+msgid "Padding:"
+msgstr ""
+
+#: dist/editor.js:1753
+msgid "Margin:"
+msgstr ""
+
+#: dist/editor.js:1755
+msgid "Border:"
+msgstr ""
+
+#: dist/editor.js:1757
+msgid "Shadow:"
+msgstr ""
+
+#: dist/editor.js:1770
+msgid "Block Name in left"
+msgstr ""
+
+#: dist/editor.js:1771
+msgid "Block Name in center"
+msgstr ""
+
+#: dist/editor.js:1772
+msgid "Block Name in right"
+msgstr ""
+
+#: inc/block.json
+msgctxt "block title"
+msgid "Features Request"
+msgstr ""
+
+#: inc/block.json
+msgctxt "block description"
+msgid "Using this you can share your experience or request a feature"
+msgstr ""
+
+#: inc/block.json
+msgctxt "block keyword"
+msgid "key1"
+msgstr ""
+
+#: inc/block.json
+msgctxt "block keyword"
+msgid "key2"
+msgstr ""
+
+#: inc/block.json
+msgctxt "block keyword"
+msgid "key3"
+msgstr ""

@@ -1,0 +1,19 @@
+$primaryColor: #4527a4;
+
+.fereqNowEditing {
+  outline: 2px solid $primaryColor;
+}
+
+.fereqInspectorInfo {
+  padding: 6px;
+
+  a {
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
+.fereqFeaturesRequest {
+  border: 1px solid #ccc;
+  font-size: 15px;
+  font-family: 'circular';
+}
