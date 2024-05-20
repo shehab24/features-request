@@ -5,6 +5,7 @@ class Fereq_Admin_Menu_Page_Add
     private $table_name_2;
 
     private $comment_table;
+    private $comment_table_reply;
     private $plugin_add;
     private $wpdb;
     public function __construct()
@@ -13,6 +14,7 @@ class Fereq_Admin_Menu_Page_Add
         $this->wpdb = $wpdb;
         $this->table_name = $this->wpdb->prefix . 'fereq_store_reports';
         $this->table_name_2 = $this->wpdb->prefix . 'fereq_store_all_voteing';
+        $this->comment_table_reply = $this->wpdb->prefix . 'fereq_store_comments_reply';
         $this->comment_table = $this->wpdb->prefix . 'fereq_store_all_comments';
         $this->plugin_add = $this->wpdb->prefix . 'fereq_store_plugin_list';
 
@@ -37,6 +39,8 @@ class Fereq_Admin_Menu_Page_Add
         add_action('wp_ajax_nopriv_edit_plugin_name_save_to_database', [$this, 'edit_plugin_name_save_to_database_handler']);
         add_action('wp_ajax_edited_plugin_name_deleted_action', [$this, 'edited_plugin_name_deleted_action_handler']);
         add_action('wp_ajax_nopriv_edited_plugin_name_deleted_action', [$this, 'edited_plugin_name_deleted_action_handler']);
+
+        add_action('admin_init', array($this , 'style_tab_color_settings_init'));
     }
 
     public function fereq_admin_enqueue_scripts()
@@ -44,6 +48,7 @@ class Fereq_Admin_Menu_Page_Add
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $current_page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
         wp_enqueue_script("jquery");
+        wp_enqueue_style('wp-color-picker');
         if (in_array($current_page, array('features-request', 'manage-Request', 'list-plugin', 'fereq-settings')))
         {
             wp_enqueue_style('jquery-data-tablecss', FEREQ_DIR_URL . 'assets/css/jquery.dataTables.css', [], FEREQ_VERSION);
@@ -54,7 +59,7 @@ class Fereq_Admin_Menu_Page_Add
             wp_enqueue_script('jquery-data-tablejs', FEREQ_DIR_URL . 'assets/js/jquery.dataTables.js', [], FEREQ_VERSION, true);
             wp_enqueue_script('fereq-bootstrap-js', FEREQ_DIR_URL . 'assets/js/bootstrap.min.js', [], FEREQ_VERSION, true);
             wp_enqueue_script('fereq-sweetalert2-js', FEREQ_DIR_URL . 'assets/js/sweetalert2.all.min.js', [], FEREQ_VERSION, true);
-            wp_enqueue_script('fereq-admin-js', FEREQ_DIR_URL . 'assets/js/admin-fereq.js', [], FEREQ_VERSION, true);
+            wp_enqueue_script('fereq-admin-js', FEREQ_DIR_URL . 'assets/js/admin-fereq.js', ['wp-color-picker'], FEREQ_VERSION, true);
         }
         $ajax_data = array(
             'ajax_url' => admin_url('admin-ajax.php'),
@@ -67,7 +72,9 @@ class Fereq_Admin_Menu_Page_Add
             'nonce7' => wp_create_nonce('add_plugin_name_to_database_nonce'), // First nonce
             'nonce8' => wp_create_nonce('edit_plugin_name_to_database_nonce'), // First nonce
             'nonce9' => wp_create_nonce('edit_plugin_name_save_to_database_nonce'), // First nonce
-            'nonce10' => wp_create_nonce('edited_plugin_name_deleted_nonce'), // First nonce
+            'nonce10' => wp_create_nonce('edited_plugin_name_deleted_nonce'),
+            'edit_comment' => wp_create_nonce('edit_comment_data_nonce'),
+            'delete_comment' => wp_create_nonce('delete_comment_data_nonce'), // First nonce
         );
         wp_localize_script('fereq-admin-js', 'ajax_data', $ajax_data);
 
@@ -104,14 +111,7 @@ class Fereq_Admin_Menu_Page_Add
             "manage-Request",
             array($this, "fereq_manage_request_submenu_callback")
         );
-        add_submenu_page(
-            "features-request",
-            __("List Plugin", "store-finder"),
-            __("List Plugin", "store-finder"),
-            "manage_options",
-            "list-plugin",
-            array($this, "fereq_list_plugin_submenu_callback")
-        );
+
         add_submenu_page(
             "features-request",
             __("Settings", "store-finder"),
@@ -121,7 +121,12 @@ class Fereq_Admin_Menu_Page_Add
             array($this, "fereq_plugin_settings_callback")
         );
 
+
     }
+
+
+
+
     public function fereq_plugin_settings_callback()
     {
         $current_tab = isset($_GET['tab']) ? $_GET['tab'] : 'general';
@@ -132,9 +137,9 @@ class Fereq_Admin_Menu_Page_Add
                 <a href="?page=fereq-settings&tab=general"
                     class="nav-tab <?php echo ($current_tab == 'general') ? 'nav-tab-active' : ''; ?>">General</a>
                 <a href="?page=fereq-settings&tab=advanced"
-                    class="nav-tab <?php echo ($current_tab == 'advanced') ? 'nav-tab-active' : ''; ?>">Advanced</a>
+                    class="nav-tab <?php echo ($current_tab == 'advanced') ? 'nav-tab-active' : ''; ?>">Style</a>
                 <a href="?page=fereq-settings&tab=listPlugin"
-                    class="nav-tab <?php echo ($current_tab == 'listPlugin') ? 'nav-tab-active' : ''; ?>">List Plugin</a>
+                    class="nav-tab <?php echo ($current_tab == 'listPlugin') ? 'nav-tab-active' : ''; ?>">Product list</a>
                 <a href="?page=fereq-settings&tab=fereq-email"
                     class="nav-tab <?php echo ($current_tab == 'fereq-email') ? 'nav-tab-active' : ''; ?>">Email</a>
 
@@ -161,6 +166,51 @@ class Fereq_Admin_Menu_Page_Add
                 ?>
             </div>
         </div>
+        <?php
+    }
+
+
+    public function style_tab_color_settings_init() {
+        register_setting('fereq_options_group', 'fereq_options');
+
+        add_settings_section(
+            'fereq_advanced_settings_section',
+            __('Advanced Settings', 'store-finder'),
+            array($this, 'fereq_advanced_settings_section_callback'),
+            'fereq-settings'
+        );
+
+        add_settings_field(
+            'fereq_custom_setting',
+            __('Custom Setting', 'store-finder'),
+            array($this, 'fereq_custom_setting_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+        add_settings_field(
+            'fereq_background_color',
+            __('Background Color', 'store-finder'),
+            array($this, 'fereq_background_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+    }
+
+    public function fereq_advanced_settings_section_callback() {
+        echo '<p>' . __('Advanced settings for the Features Request plugin.', 'store-finder') . '</p>';
+    }
+
+    public function fereq_custom_setting_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_custom_setting]" value="<?php echo isset($options['fereq_custom_setting']) ? esc_attr($options['fereq_custom_setting']) : ''; ?>">
+        <?php
+    }
+
+    public function fereq_background_color_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_background_color]" value="<?php echo isset($options['fereq_background_color']) ? esc_attr($options['fereq_background_color']) : ''; ?>" class="fereq-color-picker">
         <?php
     }
 
@@ -325,7 +375,9 @@ class Fereq_Admin_Menu_Page_Add
                                                         <?php
                                                         $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
                                                         $comment_results = $this->wpdb->get_results($comment_query);
-                                                        echo esc_html(count($comment_results));
+                                                        $comment_reply_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                                        $comment_reply_results = $this->wpdb->get_results($comment_reply_query);
+                                                        echo esc_html(count($comment_results) + count($comment_reply_results));
                                                         ?>
                                                     </b>
 
@@ -381,125 +433,7 @@ class Fereq_Admin_Menu_Page_Add
         <?php
     }
 
-    public function fereq_list_plugin_submenu_callback()
-    {
-        $results = wp_cache_get('store_data_' . $this->plugin_add);
 
-        if (false === $results)
-        {
-            $query = " SELECT * FROM " . $this->plugin_add;
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $results = $this->wpdb->get_results($query);
-            wp_cache_set('store_data_' . $this->table_name, $results);
-        }
-        ?>
-        <div class="main_div">
-            <div class="page_header_title">
-                <h3>Create Store</h3>
-                <span class="text-white btn btn-primary add_new_plugin_btn">
-                    Add New </span>
-            </div>
-            <div class="manage_store_main_div">
-                <table id="manageRequestTable" class="cell-border table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th style="width:5%; text-align:center;">
-                                <?php echo esc_html_e("Serial No", "features-request"); ?>
-                            </th>
-                            <th style="width:60%;text-align:center;">
-                                <?php echo esc_html_e("Plugin Name", "features-request"); ?>
-                            </th>
-                            <th style="width:35%;text-align:center;">
-                                <?php echo esc_html_e("Action", "features-request"); ?>
-                            </th>
-
-                        </tr>
-                    </thead>
-                    <?php
-                    if ($results)
-                    {
-                        $serialNumber = 1;
-                        foreach ($results as $result)
-                        {
-                            ?>
-                            <tr class="plugin_table_row_id_<?php echo esc_attr($result->plugin_id); ?> report_table_row">
-                                <td>
-                                    <?php echo esc_html($serialNumber++); ?>
-                                </td>
-                                <td>
-                                    <div class="div_after_td">
-                                        <span class="report_type">
-
-                                            <?php echo esc_html($result->plugin_name); ?>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="div_after_td">
-                                        <ul class="action_ul">
-                                            <li><span class="see_report edit_plugin_name"
-                                                    data-id="<?php echo esc_attr($result->plugin_id); ?>"><i
-                                                        class="fa-solid fa-pen-to-square"></i></span></li>
-
-
-                                            <li><span class="delete_report edited_plugin_name_delete"
-                                                    data-id="<?php echo esc_attr($result->plugin_id); ?>"><i
-                                                        class="fa-solid fa-trash-arrow-up"></i></span></li>
-                                        </ul>
-                                    </div>
-                                </td>
-
-
-                            </tr>
-                            <?php
-                        }
-                    }
-                    ?>
-                    <tbody>
-
-                    </tbody>
-                </table>
-                <div id="loading_overlay" class="loading_for_add_plugin_delete">
-                    <div class="cv-spinner">
-                        <span class="cspinner"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="custom-model-main add_new_plugin_popup edit_added_plugin_popup">
-                <div class="custom-model-inner">
-                    <div class="close-btn close_add_new_popup">×</div>
-                    <div class="custom-model-wrap" id="edit_added_plugin_wrap">
-                        <div class="pop-up-content-wrap">
-                            <div class="modal-container" id="edit_added_plugin">
-
-                                <div class="plugin_add_form">
-
-                                    <label for="plugin_name">Plugin Name</label>
-                                    <input type="text" name="plugin_name" id="plugin_name" placeholder="Enter Plugin name">
-
-
-                                    <button class="plugin_add_save_btn">Save</button>
-                                    <p class="status_msg"></p>
-                                </div>
-
-                            </div>
-                            <div id="loading_overlay" class="loading_for_add_plugin">
-                                <div class="cv-spinner">
-                                    <span class="cspinner"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="bg-overlay close_report_popup_overly"></div>
-            </div>
-        </div>
-        <?php
-
-    }
 
     public function show_report_content_on_popup_action_handler()
     {
@@ -511,12 +445,15 @@ class Fereq_Admin_Menu_Page_Add
         $dataId = isset($_POST['dataId']) ? sanitize_text_field($_POST['dataId']) : "";
 
         $query = $this->wpdb->prepare("
-        SELECT t1.*, COALESCE(subquery.total_voting, 0) AS total_voting
+        SELECT t1.*,
+        COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
+        COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
         FROM {$this->table_name} AS t1
         LEFT JOIN (
-            SELECT report_table_id, COUNT(vote_id) AS total_voting
+            SELECT report_table_id, 
+                SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
+                SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
             FROM {$this->table_name_2}
-            WHERE vote_ans = 'agree'
             GROUP BY report_table_id
         ) AS subquery ON t1.id = subquery.report_table_id
         WHERE t1.id = %d
@@ -588,15 +525,14 @@ class Fereq_Admin_Menu_Page_Add
                 <div class="voted_done_and_counting_box">
                     <?php
                     if ($fetch_results[0]->report_type == "suggestion_submit"):
-                        if ($fetch_results[0]->total_voting > 0):
-
-                            ?>
-                            <span class="agree_span">
-                                <?php echo esc_html($fetch_results[0]->total_voting); ?> people agree with this
-                            </span>
-                            <?php
-                        endif;
                         ?>
+                        <div class="upvote_downvote_div">
+                            <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
+                                <span
+                                    class="total_agree_vote_count_<?php echo esc_attr($fetch_results[0]->id); ?>"><?php echo esc_html($fetch_results[0]->total_agree_voting); ?></span></span>
+                            <span class="downvote_icon"><i class="fa-solid fa-thumbs-down"></i><span
+                                    class="total_disagree_vote_count_<?php echo esc_attr($fetch_results[0]->id); ?>"><?php echo esc_html($fetch_results[0]->total_disagree_voting); ?></span></span>
+                        </div>
                         <?php
                     endif;
                     ?>
@@ -698,19 +634,80 @@ class Fereq_Admin_Menu_Page_Add
 
                         foreach ($fetch_results as $comment_list):
                             ?>
-                            <li class="comment_list_div">
+
+                            <li class="comment_list_div <?php echo !empty($replyMail) ? "reply_mail_ache" : "reply_mail_nai"; ?>">
                                 <div class="comment_content">
                                     <h3 class="commentator_name"><i class="fa-solid fa-circle-user"></i>
-                                        <?php
-                                        echo esc_html($comment_list->comment_email);
-                                        ?>
+                                        <?php echo esc_html($comment_list->commentator_name); ?>
+                                        <span class="comment_email_span"><?php echo esc_html($comment_list->comment_email); ?></span>
                                     </h3>
                                     <p class="commentator_content">
-                                        <?php
-                                        echo esc_html($comment_list->comment_text);
-                                        ?>
+                                        <?php echo esc_html($comment_list->comment_text); ?>
                                     </p>
+                                    <div class="edit_remove_reply_div">
+                                        <span class="time_stamp"> <?php echo esc_html($comment_list->comment_time); ?></span>
+
+
+                                        <span class="comment_trash"
+                                            data-reportId="<?php echo esc_attr($comment_list->report_table_id); ?>"
+                                            data-commentId="<?php echo esc_attr($comment_list->comment_id); ?>"
+                                            data-commenttype="<?php echo esc_attr($comment_list->comment_type); ?>"><i
+                                                class="fa-solid fa-trash"></i></span>
+
+
+                                    </div>
                                 </div>
+                                <ul class="reply_comment_ul">
+                                    <?php
+                                    $report_table_id = $comment_list->report_table_id;
+                                    $comment_id = $comment_list->comment_id;
+                                    $commnet_reply_query_store_comment = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d", $report_table_id, $comment_id);
+                                    $comment_reply_results_for_store_comment = $this->wpdb->get_results($commnet_reply_query_store_comment);
+                                    foreach ($comment_reply_results_for_store_comment as $comment_reply):
+                                        ?>
+                                        <li
+                                            class="comment_list_div <?php echo !empty($replyMail) ? "reply_mail_ache" : "reply_mail_nai"; ?>">
+                                            <div class="comment_content">
+                                                <h3 class="commentator_name"><i class="fa-solid fa-circle-user"></i>
+                                                    <?php echo esc_html($comment_reply->commentator_name); ?><span
+                                                        class="comment_email_span"><?php echo esc_html($comment_reply->comment_email); ?></span>
+                                                </h3>
+                                                <p class="commentator_content">
+                                                    <?php
+                                                    echo esc_html($comment_reply->comment_text);
+                                                    ?>
+                                                </p>
+                                                <div class="edit_remove_reply_div">
+                                                    <span class="time_stamp">
+                                                        <?php
+                                                        $datetime1 = new DateTime($comment_reply->comment_time);
+                                                        $datetime2 = new DateTime();
+                                                        $interval = $datetime1->diff($datetime2);
+
+                                                        // Get the difference in days and minutes
+                                                        $days = $interval->days;
+                                                        $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
+                                                        echo $comment_reply->comment_time;
+                                                        ?>
+                                                    </span>
+
+
+                                                    <span class="comment_trash"
+                                                        data-reportId="<?php echo esc_attr($comment_reply->report_table_id); ?>"
+                                                        data-commentId="<?php echo esc_attr($comment_reply->comment_table_id); ?>"
+                                                        data-commenttype="<?php echo esc_attr($comment_reply->comment_type); ?>"><i
+                                                            class="fa-solid fa-trash"></i></span>
+
+
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <?php
+                                    endforeach;
+                                    ?>
+
+                                </ul>
                             </li>
 
                             <?php
@@ -726,7 +723,8 @@ class Fereq_Admin_Menu_Page_Add
                 <div class="comment_form">
                     <textarea name="" id="comment_textarea" placeholder="Leave a comment ?" cols="30" rows="10"></textarea>
                     <div class="comment_email_require_box">
-                        <input type="email" name="" placeholder="Your email" id="comment_email_field" value="Admin">
+                        <input type="text" name="" placeholder="Your Name" id="comment_name_field">
+                        <input type="email" name="" placeholder="Your email" id="comment_email_field" value="admin@gmail.com">
                         <button class="comment_btn">Comment</button>
                     </div>
                     <p class="comment_result_massage"></p>
@@ -798,7 +796,7 @@ class Fereq_Admin_Menu_Page_Add
                 <p class="overview_description">
                     <?php
                     echo esc_html($fetch_results[0]->report_description);
-                    ?> <a href="<?php echo esc_url($fetch_results[0]->report_url);?>" class="overview_given_url">
+                    ?> <a href="<?php echo esc_url($fetch_results[0]->report_url); ?>" class="overview_given_url">
                         <?php
                         echo esc_html($fetch_results[0]->report_url);
                         ?> </a>

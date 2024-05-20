@@ -1,8 +1,11 @@
+/* eslint-disable no-undef */
 
 
 jQuery(document).ready(function ($) {
 
     $(document).ready(function() {
+
+      $('.fereq-color-picker').wpColorPicker();
 
       jQuery('#manageRequestTable').DataTable({
         select: true
@@ -136,6 +139,7 @@ jQuery(document).ready(function ($) {
                    
                     if(response.success) {
                         $("#push_report_data_into_div").html(response.data.html);
+                        comment_trash_attachment_event();
                         $("div.custom-model-wrap").css({
                             "height": "auto ",
                             "max-height": "500px",
@@ -145,8 +149,10 @@ jQuery(document).ready(function ($) {
                             $(this).text("Wait....");
                             var cTextarea = $("#comment_textarea").val();
                             var comment_email_field = $("#comment_email_field").val();
+                            var comment_name_field = $("#comment_name_field").val();
                             var report_table_id_val = $("#report_table_id_val").val();
                             var requestFrom ="admin";
+                            var comment_type ="comment";
       
                             if(comment_email_field == ""){
                               $("p.comment_result_massage").text("Email are required");
@@ -167,6 +173,8 @@ jQuery(document).ready(function ($) {
                                     nonce: ajax_data.nonce4 ,
                                     comment_email_field,
                                     cTextarea,
+                                    commentator_name: comment_name_field,
+                                    comment_type,
                                     report_table_id_val,
                                     requestFrom
 
@@ -180,6 +188,8 @@ jQuery(document).ready(function ($) {
                                     $("ul.push_comment_into_ul").html(response.data.comment_html);
                                     $("#comment_textarea").val("");
                                     $("#comment_email_field").val("");
+
+                                    comment_trash_attachment_event();
                                   }
                                  
       
@@ -250,6 +260,7 @@ jQuery(document).ready(function ($) {
 
           $("div.close_report_popup, div.close_report_popup_overly").click(function(){
             $("div.show_report_popup").removeClass('model-open');
+            window.location.reload();
           });
 
           $("span.delete_report").on("click", function(){
@@ -459,6 +470,126 @@ jQuery(document).ready(function ($) {
               }
             });
           });
+
+
+          function comment_trash_attachment_event(){
+            $("span.comment_trash").on("click", function(){
+              var commentId = $(this).attr("data-commentId");
+              var reportId = $(this).attr("data-reportId");
+              var  commenttype = $(this).attr("data-commenttype");
+              Swal.fire({
+                title: "Enter Your Email Address",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Enter",
+                showLoaderOnConfirm: true,
+                inputValidator: (value) => !value && 'You need to write something!',
+                preConfirm: (value) => {
+                  return new Promise((resolve) => {
+                      Swal.showLoading(); // Show loading effect
+                      $.ajax({
+                          url: ajax_data.ajax_url,
+                          type: 'POST',
+                          data: {
+                              action: 'edit_comment_data_action', // Ajax action name
+                              nonce: ajax_data.edit_comment,
+                              comment_email: value,
+                              commentId,
+                              reportId,
+                              commenttype
+                          },
+                          success(response) {
+                              resolve(response); // Resolve the promise with the AJAX response
+                          },
+                          error(xhr, status, error) {
+                              console.log(error);
+                              Swal.hideLoading(); // Hide loading effect in case of error
+                              resolve(error); // Resolve the promise with false to close the dialog
+                          }
+                      });
+                  });
+              },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+              
+              var comment_email = result.value.data.data_all_data[0].comment_email;
+              var requestFrom = "admin" ;
+                if (result && result !== false) {
+                  if(result.value.data.status){
+                     Swal.fire({
+                        title: "Are you Sure ?",
+                        text: "Want to delete this comment",
+                        showCancelButton: true,
+                        confirmButtonText: "Delete",
+                        showLoaderOnConfirm: true,
+                        
+                        preConfirm: () => {
+                          
+      
+                          return new Promise((resolve) => {
+                            Swal.showLoading(); // Show loading effect
+                            $.ajax({
+                                url: ajax_data.ajax_url,
+                                type: 'POST',
+                                data: {
+                                    action: 'delete_comment_data_action', // Ajax action name
+                                    nonce: ajax_data.delete_comment,
+                                    comment_email,
+                                    commentId,
+                                    reportId,
+                                    commenttype,
+                                    requestFrom
+                                },
+                                success(response) {
+                                    resolve(response); // Resolve the promise with the AJAX response
+                                },
+                                error(xhr, status, error) {
+                                    console.log(error);
+                                    Swal.hideLoading(); // Hide loading effect in case of error
+                                    resolve(error); // Resolve the promise with false to close the dialog
+                                }
+                            });
+                        });
+                          
+                      },
+                      allowOutsideClick: () => !Swal.isLoading()
+                        
+                    }).then((result) => {
+
+                      console.log(result);
+                      
+                      if (result.isConfirmed) {
+                        if(result.value.data.status){
+                          $("ul.push_comment_into_ul").html(result.value.data.comment_html);
+                          $("b.comment_updated_status_" + reportId).text(result.value.data.total_count_comment);
+                          Swal.fire("Comment Deleted Successfull!");
+                          setTimeout(() => {
+                                    
+                                    comment_trash_attachment_event();
+                        }, 500);
+                          
+                        }
+                      }
+                      
+      
+                      
+                    });
+      
+                  }else{
+                    Swal.fire("No Comment found!");
+                  }
+                 
+              }
+              
+            });
+            
+      
+            })
+          }
+      
            
     });
 

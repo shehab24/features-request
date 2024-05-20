@@ -460,8 +460,18 @@ textarea#hidden_div_content {
   align-items: center;
   margin-bottom: 20px !important;
 }
+.comment_email_require_box input[type='text'] {
+  width: 35%;
+  border-radius: 10px !important;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'circular';
+  box-sizing: border-box;
+  padding: 6px 15px !important;
+  border: 1px solid #929090;
+}
 .comment_email_require_box input[type='email'] {
-  width: 80%;
+  width: 45%;
   border-radius: 10px !important;
   font-size: 16px;
   font-weight: 500;
@@ -610,4 +620,193 @@ p.status_msg.success {
 }
 div#edit_added_plugin_wrap.active {
   height: 400px !important;
+}
+span.upvote_icon,
+span.downvote_icon {
+  font-size: 15px;
+  width: 60px;
+  height: 30px;
+  background: #dfdfdf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+}
+span.upvote_icon,
+span.downvote_icon,
+i {
+  font-size: 18x;
+  margin-right: 5px;
+}
+.upvote_downvote_div {
+  display: block;
+  width: 150px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+}
+ul.reply_comment_ul {
+  margin-left: 30px !important;
+}
+span.comment_email_span {
+  padding: 5px 8px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  margin-left: 5px;
+}
+span.comment_trash {
+  margin-left: 10px !important;
+  cursor: pointer;
+}
+.swal2-container {
+  z-index: 1000000;
+}
+.swal2-popup.swal2-modal.swal2-show {
+  transform: scale(1.4);
+}
+.email_template_div {
+  padding: 15px 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  background-color: #f4f4f5;
+  height: 60px;
+  align-items: center;
+  border-radius: 5px;
+  font-family: 'circular';
+  font-size: 15px;
+  font-weight: 600;
+}
+.email_template_div {
+  margin-top: 20px;
+}
+a.email_manage_button {
+  padding: 5px 10px;
+  background: black;
+  color: #fff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.should_call {
+  margin-top: 10px;
+  padding: 20px;
+  background: #f7f7f7;
+  width: 70%;
+  border-radius: 5px;
+}
+.input_field_email_div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.input_field_email_div label {
+  display: block;
+  width: 30%;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Poppins';
+}
+.input_field_email_div input[type='text'],
+textarea {
+  width: 60%;
+  display: block;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+.input_field_email_div input[type='checkbox'],
+input[type='radio'] {
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  background: #fff;
+  color: #50575e;
+  clear: none;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 0;
+  height: 15px;
+  margin: -0.25rem 0.25rem 0 0;
+  outline: 0;
+  padding: 0 !important;
+  text-align: center;
+  vertical-align: middle;
+  width: 15px;
+  min-width: 15px;
+  -webkit-appearance: checkbox !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: 0.05s border-color ease-in-out;
+}
+button.save_suggestion_btn {
+  padding: 6px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #222;
+  color: #fff;
+  border: none;
+  outline: navajowhite;
+  border-radius: 3px;
+}
+.icon_and_title_div {
+  width: 25%;
+}
+.email_div {
+  width: 30%;
+}
+
+form.features_request_general_setting{
+  margin-top: 20px;
+}
+form.features_request_general_setting h4{
+  font-size: 18px;
+  font-weight: 600;
+  font-family:"Poppins";
+}
+
+form.features_request_general_setting table{
+  width: 50%;
+}
+form.features_request_general_setting table {
+  margin-top: 20px;
+  display: block;
+}
+form.features_request_general_setting table tr{
+  margin-top: 10px;
+
+}
+
+form.features_request_general_setting table   td{
+  width: 100%;
+
+}
+form.features_request_general_setting table td label{
+  font-size:14px ;
+  font-weight: 500;
+  font-family: "Poppins";
+
+}
+form.features_request_general_setting table td input{
+    width: 380px;
+    margin-bottom: 12px;
+    padding: 2px 10px;
+    font-size:14px ;
+    font-weight: 500;
+    font-family: "Poppins";
+}
+
+.settings_save_btn{
+  background-color: #1084d4;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  padding: 5px 10px;
 }

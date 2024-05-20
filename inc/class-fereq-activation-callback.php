@@ -16,6 +16,7 @@ class Features_Request_Activation
         $table_name = $wpdb->prefix . 'fereq_store_reports';
         $table_name_2 = $wpdb->prefix . 'fereq_store_all_voteing';
         $comment_table = $wpdb->prefix . 'fereq_store_all_comments';
+        $comment_reply_table = $wpdb->prefix . 'fereq_store_comments_reply';
         $plugin_list_table = $wpdb->prefix . 'fereq_store_plugin_list';
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -45,14 +46,29 @@ class Features_Request_Activation
         ) $charset_collate;";
 
         $sql3 = "CREATE TABLE IF NOT EXISTS $comment_table (
-            comment_id INT NOT NULL AUTO_INCREMENT,
-            report_table_id INT NOT NULL,
-            comment_text MEDIUMTEXT NOT NULL,
-            comment_email VARCHAR(50) NOT NULL,
-            PRIMARY KEY (comment_id)
-        ) $charset_collate;";
+                comment_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                report_table_id INT NOT NULL,
+                comment_text MEDIUMTEXT NOT NULL,
+                comment_type VARCHAR(50) NOT NULL,
+                commentator_name VARCHAR(50) NOT NULL,
+                comment_email VARCHAR(50) NOT NULL,
+                comment_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (comment_id)
+            ) $charset_collate;";
+        $sql4 = "CREATE TABLE IF NOT EXISTS $comment_reply_table (
+                id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                comment_table_id INT NOT NULL,
+                report_table_id INT NOT NULL,
+                comment_text MEDIUMTEXT NOT NULL,
+                comment_type VARCHAR(50) NOT NULL,
+                commentator_name VARCHAR(50) NOT NULL,
+                comment_email VARCHAR(50) NOT NULL,
+                comment_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id)
+            ) $charset_collate;";
 
-        $sql4 = "CREATE TABLE IF NOT EXISTS $plugin_list_table (
+
+        $sql5 = "CREATE TABLE IF NOT EXISTS $plugin_list_table (
             plugin_id INT NOT NULL AUTO_INCREMENT,
             plugin_name VARCHAR(250) NOT NULL,
             PRIMARY KEY (plugin_id)
@@ -63,5 +79,6 @@ class Features_Request_Activation
         dbDelta($sql2);
         dbDelta($sql3);
         dbDelta($sql4);
+        dbDelta($sql5);
     }
 }

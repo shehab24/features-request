@@ -2,16 +2,37 @@
 global $wpdb;
 $table_name = $wpdb->prefix . "fereq_store_reports";
 $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
+$suggestion_settings = get_option('suggestion_settings', array(
+    'sp_title_text' => 'Your suggestion in one simple sentence',
+    'sp_textarea_text' => 'Details',
+    'sp_drop_text' => 'Drop Your Url here',
+    'sp_email_text' => 'Your Email',
+    'sp_submit_button_text' => 'Submit Suggestion',
+    'sp_tab_title_text' => 'Suggest Improvement'
+));
+
+$issues_settings = get_option('issues_settings', array(
+    'ip_title_text' => 'Briefly describe the issue you encountered',
+    'ip_textarea_text' => 'Details',
+    'ip_drop_text' => 'Drop Your Url here',
+    'ip_email_text' => 'Your Email',
+    'ip_submit_button_text' => 'Submit Issue',
+    'ip_tab_title_text' => 'Report Issue'
+));
+
+$feedback_button_settings = get_option('feedback_button_settings', array(
+    'fda_title_text' => 'We are Bplugins. Please share your experience or request a feature. We want to make the best tool possible.',
+    'feedback_button_text' => 'Give Us Feedback'
+));
 ?>
 
 
 <div class="features_request_main_div">
     <div class="features_request_header_div">
-        <h3 class="feedback_title">We are Bplugins. Please share your experience or request a feature. We want to
-            make
-            the best tool possible.
+        <h3 class="feedback_title">
+        <?php echo esc_html($feedback_button_settings['fda_title_text']); ?>
         </h3>
-        <button class="feedback_btn">Give Us Feedback</button>
+        <button class="feedback_btn"><?php echo esc_html($feedback_button_settings['feedback_button_text']); ?></button>
 
     </div>
 
@@ -23,8 +44,8 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                     <div class="modal-container">
                         <header>
                             <div id="material-tabs">
-                                <a id="tab1-tab" href="#tab1" class="active">Report Issue</a>
-                                <a id="tab2-tab" href="#tab2">Suggest Improvement
+                                <a id="tab1-tab" href="#tab1" class="active"><?php echo esc_html($issues_settings['ip_tab_title_text']); ?></a>
+                                <a id="tab2-tab" href="#tab2"><?php echo esc_html($suggestion_settings['sp_tab_title_text']); ?>
                                 </a>
                             </div>
                         </header>
@@ -34,7 +55,7 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                 <form method="post" id="issues_form">
 
                                     <select name="issues_plugin_name" id="" required>
-                                        <option value="">Select Any Plugin</option>
+                                        <option value="">Select Any</option>
                                         <?php
                                         $query = " SELECT * FROM " . $this->plugin_add;
                                         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -51,11 +72,11 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                         ?>
                                     </select>
                                     <input type="text" name="issues_title" id=""
-                                        placeholder="Briefly describe the issue you encountered" required>
-                                    <textarea name="issues_massage" id="" cols="30" rows="10" placeholder="Details"
+                                        placeholder="<?php echo esc_html($issues_settings['ip_title_text']); ?>" required>
+                                    <textarea name="issues_massage" id="" cols="30" rows="10" placeholder="<?php echo esc_html($issues_settings['ip_textarea_text']); ?>"
                                         required></textarea>
-                                    <input type="url" name="issues_url" id="" placeholder="Drop Your Url here">
-                                    <input type="email" name="issues_email" id="" placeholder="Your Email" required>
+                                    <input type="url" name="issues_url" id="" placeholder="<?php echo esc_html($issues_settings['ip_drop_text']); ?>">
+                                    <input type="email" name="issues_email" id="" placeholder="<?php echo esc_html($issues_settings['ip_email_text']); ?>" required>
                                     <div class="submit_private_div">
                                         <input type="checkbox" name="submit_privately" class="submit_privately_input"
                                             id="submit_privately">
@@ -63,14 +84,14 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                             our
                                             team</label>
                                     </div>
-                                    <button type="submit" class="submit_btn">Submit Issue</button>
+                                    <button type="submit" class="submit_btn"><?php echo esc_html($issues_settings['ip_submit_button_text']); ?></button>
                                 </form>
                                 <p class="submisson_msg"></p>
                             </div>
                             <div id="tab2" class="feedback_tab">
                                 <form method="post" id="suggestion_form">
                                     <select name="suggestion_plugin_name" id="" required>
-                                        <option value="">Select Any Plugin</option>
+                                        <option value="">Select Any </option>
                                         <?php
                                         $query = " SELECT * FROM " . $this->plugin_add;
                                         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -87,11 +108,11 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                         ?>
                                     </select>
                                     <input type="text" name="suggestion_title" id=""
-                                        placeholder="Your suggestion in one simple sentence" required>
-                                    <textarea name="suggestion_massage" id="" cols="30" rows="10" placeholder="Details"
+                                        placeholder="<?php echo esc_attr($suggestion_settings['sp_title_text']); ?>" required>
+                                    <textarea name="suggestion_massage" id="" cols="30" rows="10" placeholder="<?php echo esc_attr($suggestion_settings['sp_textarea_text']); ?>"
                                         required></textarea>
-                                    <input type="url" name="suggestion_url" id="" placeholder="Drop Your Url here">
-                                    <input type="email" name="suggestion_email" id="" placeholder="Your Email" required>
+                                    <input type="url" name="suggestion_url" id="" placeholder="<?php echo esc_attr($suggestion_settings['sp_drop_text']); ?>">
+                                    <input type="email" name="suggestion_email" id="" placeholder="<?php echo esc_attr($suggestion_settings['sp_email_text']); ?>" required>
                                     <div class="submit_private_div">
                                         <input type="checkbox" name="submit_privately" class="submit_privately_input"
                                             id="submit_privately_2">
@@ -99,7 +120,7 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                             our
                                             team</label>
                                     </div>
-                                    <button type="submit" class="submit_btn">Submit Suggestion</button>
+                                    <button type="submit" class="submit_btn"><?php echo esc_html($suggestion_settings['sp_submit_button_text']); ?></button>
                                 </form>
                                 <p class="for_suggestion"></p>
                             </div>
@@ -180,8 +201,10 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                         <?php
                                         if ($result->report_type == "suggestion_submit"):
 
+                                            $voting_status = ($result->total_agree_voting > 0 || $result->total_disagree_voting > 0) ? 'popular' : 'not_popular';
 
                                             ?>
+                                            <input type="hidden" name="popular" value="<?php echo $voting_status ;  ?>" />
                                             <div class="upvote_downvote_div">
                                                 <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
                                                     <span
@@ -199,7 +222,9 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                             <?php
                                             $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
                                             $comment_results = $this->wpdb->get_results($comment_query);
-                                            echo esc_html(count($comment_results));
+                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                            $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
+                                            echo esc_html(count($comment_results) + count($comment_reply_results_total));
                                             ?>
                                         </b>
                                     </div>
@@ -303,9 +328,10 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                         </p>
                                         <?php
                                         if ($result->report_type == "suggestion_submit"):
-
+                                            $voting_status = ($result->total_agree_voting > 0 || $result->total_disagree_voting > 0) ? 'popular' : 'not_popular';
 
                                             ?>
+                                            <input type="hidden" name="popular" value="<?php echo $voting_status ;  ?>" />
                                             <div class="upvote_downvote_div">
                                                 <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
                                                     <span
@@ -323,7 +349,9 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                             <?php
                                             $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
                                             $comment_results = $this->wpdb->get_results($comment_query);
-                                            echo esc_html(count($comment_results));
+                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                            $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
+                                            echo esc_html(count($comment_results) + count($comment_reply_results_total));
                                             ?>
                                         </b>
                                     </div>
@@ -414,7 +442,10 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                         </p>
                                         <?php
                                         if ($result->report_type == "suggestion_submit"):
+                                            $voting_status = ($result->total_agree_voting > 0 || $result->total_disagree_voting > 0) ? 'popular' : 'not_popular';
+
                                             ?>
+                                            <input type="hidden" name="popular" value="<?php echo $voting_status ;  ?>" />
                                             <div class="upvote_downvote_div">
                                                 <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
                                                     <span
@@ -432,7 +463,9 @@ $plugin_list = $wpdb->prefix . 'fereq_store_plugin_list';
                                             <?php
                                             $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
                                             $comment_results = $this->wpdb->get_results($comment_query);
-                                            echo esc_html(count($comment_results));
+                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                            $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
+                                            echo esc_html(count($comment_results) + count($comment_reply_results_total));
                                             ?>
                                         </b>
                                     </div>

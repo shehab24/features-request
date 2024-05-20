@@ -189,7 +189,8 @@ button.filter_tag.active {
   position: absolute;
   font-family: 'FontAwesome';
   right: 5px;
-  top: 7px;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
 .features_request_body .filtering ul li button.filter_button.active::after {
   font-size: 16px;
@@ -349,6 +350,7 @@ button.filter_tag.active {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  position: relative;
 }
 @media screen and (min-width: 800px) {
   .custom-model-main:before {
@@ -626,6 +628,7 @@ textarea#hidden_div_content {
 }
 .comment_list_div p.commentator_content {
   font-size: 16px;
+  margin-bottom: 4px;
 }
 .comment_form {
   width: 100%;
@@ -650,8 +653,18 @@ textarea#hidden_div_content {
   align-items: center;
   margin-bottom: 20px !important;
 }
+.comment_email_require_box input[type='text'] {
+  width: 35%;
+  border-radius: 10px !important;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'circular';
+  box-sizing: border-box;
+  padding: 10px 15px !important;
+  border: 1px solid #929090;
+}
 .comment_email_require_box input[type='email'] {
-  width: 80%;
+  width: 45%;
   border-radius: 10px !important;
   font-size: 16px;
   font-weight: 500;
@@ -741,7 +754,39 @@ p.for_suggestion.error {
 span.after_voting_done_msg {
   font-size: 14px;
   font-weight: 600;
-  margin-left: 15px;
+  width: 220px;
+  background: #fff;
+  text-align: center;
+  position: absolute;
+  display: block;
+  bottom: -50px;
+  z-index: 1;
+  padding: 7px 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+}
+span.after_voting_done_msg.hovered{
+  visibility: visible;
+  opacity: 1;
+}
+span.after_voting_done_msg p {
+  margin: 0;
+  padding: 0;
+}
+span.after_voting_done_msg::before {
+  content: '';
+  clear: both;
+  position: absolute;
+  top: -10px;
+  left: 102px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  transform: rotate(45deg);
+  z-index: -1;
 }
 p.submittes_result_massage {
   margin-top: 10px;
@@ -778,6 +823,10 @@ span.reported_plugin_name {
   justify-content: space-around;
   align-items: center;
 }
+.upvote_downvote_div_in_popup {
+  width: 220px;
+  justify-content: space-between;
+}
 span.upvote_icon,
 span.downvote_icon {
   font-size: 15px;
@@ -788,6 +837,7 @@ span.downvote_icon {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  cursor: pointer;
 }
 span.upvote_icon,
 span.downvote_icon,
@@ -803,4 +853,63 @@ i {
 }
 input#keep_me_posted {
   transform: translate(-10px, 3px);
+}
+span.voting_span.active {
+  background-color: #000;
+  color: #fff;
+}
+span.voting_span.disabled{
+  pointer-events: none !important;
+}
+p.remove_vote_btn {
+  background: #070707;
+  padding: 4px 8px !important;
+  font-size: 10px;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer !important;
+}
+.swal2-container {
+  z-index: 1000000;
+}
+.edit_remove_reply_div span {
+  margin-right: 15px;
+  font-size: 12px;
+  cursor: pointer;
+}
+span.leave_comment_title {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'circular';
+  margin: 5px 5px;
+  display: block;
+}
+.comment_reply_icon p {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+.comment_no_reply_icon {
+  display: none;
+}
+li.comment_list_div.reply_mail_ache {
+  margin-left: 25px;
+}
+span.comment_reply_icon.reply_hidden {
+  display: none;
+}
+ul.reply_comment_ul {
+  margin-left: 30px !important;
+}
+input#swal2-input {
+  width: unset !important;
+}
+input.comment_update_email {
+  margin-bottom: 10px;
+}
+textarea.comment_update_textarea {
+  margin-bottom: 10px;
+}
+.swal2-popup.swal2-modal.swal2-show {
+  font-family: 'circular';
 }

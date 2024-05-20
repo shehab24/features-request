@@ -25,7 +25,7 @@ if (false === $results)
                         <?php echo esc_html_e("Serial No", "features-request"); ?>
                     </th>
                     <th style="width:60%;text-align:center;">
-                        <?php echo esc_html_e("Plugin Name", "features-request"); ?>
+                        <?php echo esc_html_e("Product Name", "features-request"); ?>
                     </th>
                     <th style="width:35%;text-align:center;">
                         <?php echo esc_html_e("Action", "features-request"); ?>
@@ -93,8 +93,8 @@ if (false === $results)
 
                         <div class="plugin_add_form">
 
-                            <label for="plugin_name">Plugin Name</label>
-                            <input type="text" name="plugin_name" id="plugin_name" placeholder="Enter Plugin name">
+                            <label for="plugin_name">Product Name</label>
+                            <input type="text" name="plugin_name" id="plugin_name" placeholder="Enter Product name">
 
 
                             <button class="plugin_add_save_btn">Save</button>
