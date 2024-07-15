@@ -91,7 +91,7 @@ You can use unlimited times as you want.
 
 = Where can I get support? =
 
-You can post your questions on the [support forum here](https://wordpress.org/support/plugin/block-directory/)
+You can post your questions on the [support forum here](https://wordpress.org/support/plugin/features-request/)
 
 
 == Screenshots ==
@@ -115,7 +115,7 @@ You can post your questions on the [support forum here](https://wordpress.org/su
 
 * Public source code GitHub link for review, study, and contribute.
 
-https://github.com/shehab24/store-finder
+https://github.com/shehab24/features-request
 
 * Sweet alert 
 https://sweetalert2.github.io/
