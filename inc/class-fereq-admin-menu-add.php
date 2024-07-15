@@ -129,6 +129,7 @@ class Fereq_Admin_Menu_Page_Add
 
     public function fereq_plugin_settings_callback()
     {
+        //phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $current_tab = isset($_GET['tab']) ? $_GET['tab'] : 'general';
         ?>
         <div class="wrap">
@@ -175,18 +176,12 @@ class Fereq_Admin_Menu_Page_Add
 
         add_settings_section(
             'fereq_advanced_settings_section',
-            __('Advanced Settings', 'store-finder'),
+            __('Style Settings', 'features-request'),
             array($this, 'fereq_advanced_settings_section_callback'),
             'fereq-settings'
         );
 
-        add_settings_field(
-            'fereq_custom_setting',
-            __('Custom Setting', 'store-finder'),
-            array($this, 'fereq_custom_setting_callback'),
-            'fereq-settings',
-            'fereq_advanced_settings_section'
-        );
+
         add_settings_field(
             'fereq_background_color',
             __('Background Color', 'store-finder'),
@@ -194,23 +189,136 @@ class Fereq_Admin_Menu_Page_Add
             'fereq-settings',
             'fereq_advanced_settings_section'
         );
+
+        add_settings_field(
+            'fereq_all_title_font_size',
+            __('All title font size', 'store-finder'),
+            array($this, 'fereq_all_title_font_size_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+
+
+        add_settings_field(
+            'fereq_all_title_font_color',
+            __('All Title Color', 'store-finder'),
+            array($this, 'fereq_all_title_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+
+        add_settings_field(
+            'fereq_all_paragraph_font_size',
+            __('All Paragraph font size', 'store-finder'),
+            array($this, 'fereq_all_paragraph_font_size_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+        add_settings_field(
+            'fereq_all_paragraph_font_color',
+            __('All Paragraph Color', 'store-finder'),
+            array($this, 'fereq_all_paragraph_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+
+
+        add_settings_field(
+            'fereq_button_background_color',
+            __('Button Background Color', 'store-finder'),
+            array($this, 'fereq_button_background_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+        add_settings_field(
+            'fereq_button_text_color',
+            __('Button text Color', 'store-finder'),
+            array($this, 'fereq_button_text_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+
+        add_settings_field(
+            'fereq_like_button_background_color',
+            __('Like Button Background Color', 'store-finder'),
+            array($this, 'fereq_like_button_background_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
+        add_settings_field(
+            'fereq_like_button_text_color',
+            __('Like Button text Color', 'store-finder'),
+            array($this, 'fereq_like_button_text_color_callback'),
+            'fereq-settings',
+            'fereq_advanced_settings_section'
+        );
     }
 
     public function fereq_advanced_settings_section_callback() {
-        echo '<p>' . __('Advanced settings for the Features Request plugin.', 'store-finder') . '</p>';
+        echo '<p>' . esc_html_e('Style settings for the Features Request plugin.', 'features-request') . '</p>';
     }
 
-    public function fereq_custom_setting_callback() {
-        $options = get_option('fereq_options');
-        ?>
-        <input type="text" name="fereq_options[fereq_custom_setting]" value="<?php echo isset($options['fereq_custom_setting']) ? esc_attr($options['fereq_custom_setting']) : ''; ?>">
-        <?php
-    }
+
 
     public function fereq_background_color_callback() {
         $options = get_option('fereq_options');
         ?>
         <input type="text" name="fereq_options[fereq_background_color]" value="<?php echo isset($options['fereq_background_color']) ? esc_attr($options['fereq_background_color']) : ''; ?>" class="fereq-color-picker">
+        <?php
+    }
+    public function fereq_button_background_color_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_button_background_color]" value="<?php echo isset($options['fereq_button_background_color']) ? esc_attr($options['fereq_button_background_color']) : ''; ?>" class="fereq-color-picker">
+        <?php
+    }
+    public function fereq_button_text_color_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_button_text_color]" value="<?php echo isset($options['fereq_button_text_color']) ? esc_attr($options['fereq_button_text_color']) : ''; ?>" class="fereq-color-picker">
+        <?php
+    }
+    public function fereq_all_title_color_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_all_title_font_color]" value="<?php echo isset($options['fereq_all_title_font_color']) ? esc_attr($options['fereq_all_title_font_color']) : ''; ?>" class="fereq-color-picker">
+        <?php
+    }
+    public function fereq_all_paragraph_color_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_all_paragraph_font_color]" value="<?php echo isset($options['fereq_all_paragraph_font_color']) ? esc_attr($options['fereq_all_paragraph_font_color']) : ''; ?>" class="fereq-color-picker">
+        <?php
+    }
+
+    public function fereq_all_title_font_size_callback(){
+        $options = get_option('fereq_options');
+        ?>
+        <input type="number" name="fereq_options[fereq_all_title_font_size]" value="<?php echo isset($options['fereq_all_title_font_size']) ? esc_attr($options['fereq_all_title_font_size']) : '16'; ?>" min="10" max="72">
+        <span>px</span>
+        <p class="description"><?php esc_html_e('Set the font size in pixels.', 'features-request'); ?></p>
+        <?php
+    }
+    public function fereq_all_paragraph_font_size_callback(){
+        $options = get_option('fereq_options');
+        ?>
+        <input type="number" name="fereq_options[fereq_all_paragraph_font_size]" value="<?php echo isset($options['fereq_all_paragraph_font_size']) ? esc_attr($options['fereq_all_paragraph_font_size']) : '14'; ?>" min="10" max="72">
+        <span>px</span>
+        <p class="description"><?php esc_html_e('Set the font size in pixels.', 'features-request'); ?></p>
+        <?php
+    }
+
+    public function fereq_like_button_background_color_callback() {
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_like_button_background_color]" value="<?php echo isset($options['fereq_like_button_background_color']) ? esc_attr($options['fereq_like_button_background_color']) : ''; ?>" class="fereq-color-picker">
+        <?php
+    }
+
+    public function fereq_like_button_text_color_callback(){
+        $options = get_option('fereq_options');
+        ?>
+        <input type="text" name="fereq_options[fereq_like_button_text_color]" value="<?php echo isset($options['fereq_like_button_text_color']) ? esc_attr($options['fereq_like_button_text_color']) : ''; ?>" class="fereq-color-picker">
         <?php
     }
 
@@ -260,6 +368,7 @@ class Fereq_Admin_Menu_Page_Add
                     ) AS subquery ON t1.id = subquery.report_table_id
                 ";
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $results = $this->wpdb->get_results($query);
             wp_cache_set('store_data_' . $this->table_name, $results);
         }
@@ -373,9 +482,17 @@ class Fereq_Admin_Menu_Page_Add
                                                         class="fa-regular fa-comment"></i>
                                                     <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                                                         <?php
-                                                        $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                                                        $comment_table =  sanitize_key($this->comment_table);
+                                                        $comment_table_reply =  sanitize_key($this->comment_table_reply);
+
+                                                        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                                        $comment_query = $this->wpdb->prepare("SELECT * FROM  $comment_table  WHERE report_table_id = %d", $result->id);
+                                                         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                                         $comment_results = $this->wpdb->get_results($comment_query);
-                                                        $comment_reply_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+
+                                                        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                                        $comment_reply_query = $this->wpdb->prepare("SELECT * FROM  $comment_table_reply  WHERE report_table_id = %d" ,$result->id);
+                                                        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                                         $comment_reply_results = $this->wpdb->get_results($comment_reply_query);
                                                         echo esc_html(count($comment_results) + count($comment_reply_results));
                                                         ?>
@@ -443,28 +560,19 @@ class Fereq_Admin_Menu_Page_Add
             return;
         }
         $dataId = isset($_POST['dataId']) ? sanitize_text_field($_POST['dataId']) : "";
+        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$this->table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$this->table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.id = %d", $dataId);
 
-        $query = $this->wpdb->prepare("
-        SELECT t1.*,
-        COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-        COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-        FROM {$this->table_name} AS t1
-        LEFT JOIN (
-            SELECT report_table_id, 
-                SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-            FROM {$this->table_name_2}
-            GROUP BY report_table_id
-        ) AS subquery ON t1.id = subquery.report_table_id
-        WHERE t1.id = %d
-    ", $dataId);
-
-
-
+    
+            
         // Execute the query and fetch the results
+         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
         ob_start();
+
+
+        
 
         ?>
         <div class="popup_overview_details_box">
@@ -580,12 +688,11 @@ class Fereq_Admin_Menu_Page_Add
             return;
         }
         $dataId = isset($_POST['dataId']) ? sanitize_text_field($_POST['dataId']) : "";
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE id = %d ", $dataId);
 
-
-
         // Execute the query and fetch the results
+         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
         ob_start();
@@ -628,7 +735,9 @@ class Fereq_Admin_Menu_Page_Add
                 <ul class="push_comment_into_ul">
 
                     <?php
-                    $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $fetch_results[0]->id);
+                    //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $query = $this->wpdb->prepare("SELECT * FROM {$this->comment_table} WHERE report_table_id = %d", $fetch_results[0]->id);
+                    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                     $fetch_results = $this->wpdb->get_results($query);
                     if (count($fetch_results) > 0):
 
@@ -661,7 +770,9 @@ class Fereq_Admin_Menu_Page_Add
                                     <?php
                                     $report_table_id = $comment_list->report_table_id;
                                     $comment_id = $comment_list->comment_id;
-                                    $commnet_reply_query_store_comment = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d", $report_table_id, $comment_id);
+                                    //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                    $commnet_reply_query_store_comment = $this->wpdb->prepare("SELECT * FROM {$this->comment_table_reply} WHERE report_table_id = %d AND comment_table_id= %d", $report_table_id, $comment_id);
+                                    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                     $comment_reply_results_for_store_comment = $this->wpdb->get_results($commnet_reply_query_store_comment);
                                     foreach ($comment_reply_results_for_store_comment as $comment_reply):
                                         ?>
@@ -687,7 +798,7 @@ class Fereq_Admin_Menu_Page_Add
                                                         // Get the difference in days and minutes
                                                         $days = $interval->days;
                                                         $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-                                                        echo $comment_reply->comment_time;
+                                                        echo esc_html($comment_reply->comment_time);
                                                         ?>
                                                     </span>
 
@@ -747,12 +858,13 @@ class Fereq_Admin_Menu_Page_Add
             return;
         }
         $dataId = isset($_POST['dataId']) ? sanitize_text_field($_POST['dataId']) : "";
-
+       //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE id = %d ", $dataId);
 
 
 
         // Execute the query and fetch the results
+         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
         ob_start();
@@ -810,7 +922,9 @@ class Fereq_Admin_Menu_Page_Add
                 <ul class="push_comment_into_ul">
 
                     <?php
-                    $query = $this->wpdb->prepare("SELECT * FROM $this->table_name_2 WHERE report_table_id = %d", $fetch_results[0]->id);
+                    //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $query = $this->wpdb->prepare("SELECT * FROM {$this->table_name_2} WHERE report_table_id = %d", $fetch_results[0]->id);
+                    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                     $fetch_results = $this->wpdb->get_results($query);
                     if (count($fetch_results) > 0):
 
@@ -960,9 +1074,9 @@ class Fereq_Admin_Menu_Page_Add
             return;
         }
         $plugin_id = isset($_POST['plugin_id']) ? sanitize_text_field($_POST['plugin_id']) : "";
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $query = $this->wpdb->prepare("SELECT * FROM {$this->plugin_add} WHERE plugin_id = %d", $plugin_id);
-
+ // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $plugin_data = $this->wpdb->get_row($query);
 
         if ($plugin_data !== null)

@@ -102,7 +102,7 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
     <li>
         <div class="email_template_div">
             <div class="icon_and_title_div">Issue Email</div>
-            <div class="email_div"><?php echo get_option("issue_recipient", ""); ?></div>
+            <div class="email_div"><?php echo esc_html(get_option("issue_recipient", "")); ?></div>
             <div class="manage_div"><a class="email_manage_button"
                     href="?page=fereq-settings&tab=fereq-email&setting=issues_setting">Manage</a>
             </div>
@@ -111,7 +111,7 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
     <li>
         <div class="email_template_div">
             <div class="icon_and_title_div">Voting Email</div>
-            <div class="email_div"><?php echo get_option("voting_show_recipient", ""); ?></div>
+            <div class="email_div"><?php echo esc_html(get_option("voting_show_recipient", "")); ?></div>
             <div class="manage_div"><a class="email_manage_button"
                     href="?page=fereq-settings&tab=fereq-email&setting=voting_email">Manage</a>
             </div>
@@ -120,7 +120,7 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
     <li>
         <div class="email_template_div">
             <div class="icon_and_title_div">Vote Delete Email</div>
-            <div class="email_div"><?php echo get_option("vote_delete_recipient", "") ; ?></div>
+            <div class="email_div"><?php echo esc_html(get_option("vote_delete_recipient", "")) ; ?></div>
             <div class="manage_div"><a class="email_manage_button"
                     href="?page=fereq-settings&tab=fereq-email&setting=vote_delete_email">Manage</a>
             </div>
@@ -185,7 +185,7 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
 <!-- comment admin start  -->
 <div class="should_call" <?php echo isset($_SESSION['comment_email_setting']) ? 'style="display: block;"' : 'style="display: none;"'; ?>>
     <?php
-    if (isset($_POST['comment_email_setting']) && $_POST['comment_email_setting'] === "comment_email_setting")
+    if (isset($_POST['comment_email_setting']) && $_POST['comment_email_setting'] === "comment_email_setting" && check_admin_referer('comment_email_setting_action', 'comment_email_setting_nonce'))
     {
         $comment_email_enable_disable = $_POST['comment_email_enable_disable'];
         $comment_email_recipient = $_POST['comment_email_recipient'];
@@ -246,6 +246,8 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
             <textarea cols="5" rows="5" name="comment_email_email_content" id="email_content"
                 required><?php echo esc_attr($get_comment_email_email_content); ?> </textarea>
         </div>
+        <input type="hidden" name="comment_email_setting_nonce" value="<?php echo esc_attr(wp_create_nonce('comment_email_setting_action')); ?>">
+
         <button type="submit" name="comment_email_setting" value="comment_email_setting" class="save_suggestion_btn">Save</button>
 
     </form>
@@ -255,7 +257,7 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
 <!-- comment delete admin form  -->
 <div class="should_call" <?php echo isset($_SESSION['comment_delete_admin_email_setting']) ? 'style="display: block;"' : 'style="display: none;"'; ?>>
     <?php
-    if (isset($_POST['comment_email_setting']) && $_POST['comment_email_setting'] === "comment_email_setting")
+    if (isset($_POST['comment_email_setting']) && $_POST['comment_email_setting'] === "comment_email_setting" && check_admin_referer('comment_delete_admin_email_setting_action', 'comment_delete_admin_email_setting_nonce'))
     {
         $comment_delete_admin_email_enable_disable = $_POST['comment_delete_admin_email_enable_disable'];
         $comment_delete_admin_email_recipient = $_POST['comment_delete_admin_email_recipient'];
@@ -316,6 +318,8 @@ if (isset($_GET['setting']) && $_GET['setting'] === 'suggestion_setting' && isse
             <textarea cols="5" rows="5" name="comment_delete_admin_email_email_content" id="email_content"
                 required><?php echo esc_attr($get_comment_delete_admin_email_email_content); ?> </textarea>
         </div>
+        <input type="hidden" name="comment_delete_admin_email_setting_nonce" value="<?php echo esc_attr(wp_create_nonce('comment_delete_admin_email_setting_action')); ?>">
+
         <button type="submit" name="comment_delete_admin_email_setting" value="comment_delete_admin_email_setting" class="save_suggestion_btn">Save</button>
 
     </form>

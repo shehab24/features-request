@@ -3,8 +3,8 @@
  * Plugin Name: Features Request
  * Description: Using this you can share your experience or request a feature.
  * Version: 1.0.0
- * Author: bPlugins LLC
- * Author URI: http://bplugins.com
+ * Author: Indione LLC
+ * Author URI: https://profiles.wordpress.org/indionetech/
  * License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: features-request
@@ -41,3 +41,5 @@ function fereq_deactivation_function_callback()
 {
     new Features_Request_Deactivation();
 }
+
+

@@ -1,6 +1,6 @@
 <?php
 // Check if the form is submitted
-if (isset($_POST['settings_save_btn'])) {
+if (isset($_POST['settings_save_btn']) && check_admin_referer('my_settings_action', 'my_settings_nonce')) {
     // Suggestion Form Settings
     $suggestion_settings = array(
         'sp_title_text' => sanitize_text_field($_POST['sp_title_text']),
@@ -60,7 +60,7 @@ $issues_settings = get_option('issues_settings', array(
 ));
 
 $feedback_button_settings = get_option('feedback_button_settings', array(
-    'fda_title_text' => 'We are Bplugins. Please share your experience or request a feature. We want to make the best tool possible.',
+    'fda_title_text' => 'We are Indione. Please share your experience or request a feature. We want to make the best tool possible.',
     'feedback_button_text' => 'Give Us Feedback'
 ));
 ?>
@@ -161,6 +161,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
             </td>
         </tr>
     </table>
+    <input type="hidden" name="my_settings_nonce" value="<?php echo esc_attr( wp_create_nonce('my_settings_action')); ?>">
 
     <input type="submit" value="Save Changes" name="settings_save_btn" class="settings_save_btn">
 </form>

@@ -54,12 +54,15 @@ class Features_Request_Shortcode
 
     public function frontend_scripts_callback()
     {
-        wp_enqueue_script("jquery");
-        wp_enqueue_style("fereq-frontend-css", FEREQ_DIR_URL . "assets/css/frontend-fereq.css", [], FEREQ_VERSION, 'screen');
-        wp_enqueue_style("fereq-fontawesome-css", FEREQ_DIR_URL . "assets/css/font-awesome.min.css", [], FEREQ_VERSION, 'screen');
-        wp_enqueue_style('fereq-sweetalert2-css', FEREQ_DIR_URL . 'assets/css/sweetalert2.min.css', [], FEREQ_VERSION);
-        wp_enqueue_script('fereq-sweetalert2-js', FEREQ_DIR_URL . 'assets/js/sweetalert2.all.min.js', [], FEREQ_VERSION, true);
-        wp_enqueue_script("fereq-frontend-js", FEREQ_DIR_URL . "assets/js/frontend-fereq.js", [], FEREQ_VERSION, true);
+        if ( ! is_admin() ) { 
+            wp_enqueue_script("jquery");
+            wp_enqueue_style("fereq-frontend-css", FEREQ_DIR_URL . "assets/css/frontend-fereq.css", [], FEREQ_VERSION, 'screen');
+            wp_enqueue_style("fereq-fontawesome-css", FEREQ_DIR_URL . "assets/css/font-awesome.min.css", [], FEREQ_VERSION, 'screen');
+            wp_enqueue_style('fereq-sweetalert2-css', FEREQ_DIR_URL . 'assets/css/sweetalert2.min.css', [], FEREQ_VERSION);
+            wp_enqueue_script('fereq-sweetalert2-js', FEREQ_DIR_URL . 'assets/js/sweetalert2.all.min.js', [], FEREQ_VERSION, true);
+            wp_enqueue_script("fereq-frontend-js", FEREQ_DIR_URL . "assets/js/frontend-fereq.js", [], FEREQ_VERSION, true);
+        }
+        
         $ajax_data = array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce1' => wp_create_nonce('suggestion_submission_nonce'), // First nonce
@@ -82,14 +85,105 @@ class Features_Request_Shortcode
     public function features_request_shortcode_callback()
     {
         ob_start();
+        $options = get_option('fereq_options');
+        $fereq_background_color = isset($options['fereq_background_color']) ? $options['fereq_background_color'] : 'rgb(244 244 245)';
+        $button_bg_color = isset($options['fereq_button_background_color']) ?esc_attr($options['fereq_button_background_color']) : '#333';
+        $button_text_color = isset($options['fereq_button_text_color']) ? esc_attr($options['fereq_button_text_color']) : '#fff';
+        $fereq_like_button_background_color = isset($options['fereq_like_button_background_color']) ? $options['fereq_like_button_background_color'] : '#dfdfdf';
+        $fereq_like_button_text_color = isset($options['fereq_like_button_text_color']) ? $options['fereq_like_button_text_color'] : '#333';
+        $fereq_all_title_font_size = isset($options['fereq_all_title_font_size']) ? $options['fereq_all_title_font_size'] . 'px' : '16px';
+        $fereq_all_title_font_color = isset($options['fereq_all_title_font_color']) ? $options['fereq_all_title_font_color'] : '#333';
+        $fereq_all_paragraph_font_size = isset($options['fereq_all_paragraph_font_size']) ? $options['fereq_all_paragraph_font_size'] . 'px' : '14px';
+        $fereq_all_paragraph_font_color = isset($options['fereq_all_paragraph_font_color']) ? $options['fereq_all_paragraph_font_color'] : '#333';
 
+        $filter_button_text_default =  isset($options['fereq_button_text_color']) ? esc_attr($options['fereq_button_text_color']) : "#333";
+        echo '<style scoped>' . PHP_EOL;
+
+        echo 'button.filter_button.active {
+            background-color: ' . esc_attr($button_bg_color) . ' !important;
+            color: ' . esc_attr($button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'button.filter_button {
+            background-color: ' . esc_attr($fereq_background_color) . ' !important;
+            color: ' . esc_attr($filter_button_text_default) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'button.filter_tag.active {
+            background-color: ' . esc_attr($button_bg_color) . ' !important;
+            color: ' . esc_attr($button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'button.filter_tag {
+            background-color: ' . esc_attr($fereq_background_color) . ' !important;
+            color: ' . esc_attr($filter_button_text_default) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'button.feedback_btn {
+            background-color: ' . esc_attr($button_bg_color) . ' !important;
+            color: ' . esc_attr($button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'button.comment_btn {
+            background-color: ' . esc_attr($button_bg_color) . ' !important;
+            color: ' . esc_attr($button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'button.vote_btn {
+            background-color: ' . esc_attr($button_bg_color) . ' !important;
+            color: ' . esc_attr($button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'div.feedback_tab button[type="submit"] {
+            background-color: ' . esc_attr($button_bg_color) . ' !important;
+            color: ' . esc_attr($button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'div.features_request_header_div {
+            background-color: ' . esc_attr($fereq_background_color) . ' !important;
+            color: ' . esc_attr($fereq_all_paragraph_font_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo '.features_request_body .tabs__content ul .filtering_data {
+            background-color: ' . esc_attr($fereq_background_color) . ' !important;
+            color: ' . esc_attr($fereq_all_paragraph_font_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'div.features_request_header_div .feedback_title {
+            color: ' . esc_attr($fereq_all_title_font_color) . ' !important;
+            font-size: ' . esc_attr($fereq_all_title_font_size) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'div.filtering_data_content h3 {
+            color: ' . esc_attr($fereq_all_title_font_color) . ' !important;
+            font-size: ' . esc_attr($fereq_all_title_font_size) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'div.filtering_data_content h3 span {
+            color: #333 !important;
+            font-size: inherit;
+        }' . PHP_EOL;
+        
+        echo 'div.filtering_data_content p {
+            color: ' . esc_attr($fereq_all_paragraph_font_color) . ' !important;
+            font-size: ' . esc_attr($fereq_all_paragraph_font_size) . ' !important;
+        }' . PHP_EOL;
+        
+        echo 'span.upvote_icon, span.downvote_icon {
+            background-color: ' . esc_attr($fereq_like_button_background_color) . ' !important;
+            color: ' . esc_attr($fereq_like_button_text_color) . ' !important;
+        }' . PHP_EOL;
+        
+        echo '</style>' . PHP_EOL;
+        
+    
         require_once FEREQ_DIR_PATH . 'inc/class-fereq-shortcode-template.php';
-
+    
         $html = ob_get_clean();
-
+    
         return $html;
-
     }
+    
 
 
     public function issues_submitted_form_action_handler()
@@ -300,32 +394,23 @@ class Features_Request_Shortcode
             wp_send_json_error("Nonce verification failed!");
             return;
         }
-
-        $query = $this->wpdb->prepare(" SELECT t1.*, 
-                COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-                COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-            FROM {$this->table_name} AS t1
-            LEFT JOIN (
-                SELECT report_table_id, 
-                    SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                    SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-                FROM {$this->table_name_2}
-                GROUP BY report_table_id
-            ) AS subquery ON t1.id = subquery.report_table_id
-            WHERE t1.report_status = %s
-            AND t1.submit_privately != %s
-        ", 'exploring', 'on');
-
+        $sanitized_table_name = sanitize_key($this->table_name);
+        $sanitized_table_name_2 = sanitize_key($this->table_name_2);
+          //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $query = $this->wpdb->prepare("SELECT t1.*,  COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,  COALESCE(subquery total_disagree_voting, 0) AS total_disagree_voting FROM {$sanitized_table_name} AS t1 LEFT JOIN ( SELECT report_table_id,   SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$sanitized_table_name_2} GROUP BY report_table_id ) AS subquery ON t1.id = subquery.report_table_id WHERE t1.report_status = %s AND t1.submit_privately != %s ", 'exploring', 'on');
 
 
 
         // Execute the query and fetch the results
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
         ob_start();
         foreach ($fetch_results as $result):
             $insertion_time_str = $result->inserted_time;
+              //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             $current_date = date("Y-m-d");
+              //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             $insertion_date = date("Y-m-d", strtotime($insertion_time_str));
             ?>
             <li class="show_content_popup_btn" data-id="<?php echo esc_attr($result->id); ?>">
@@ -369,7 +454,9 @@ class Features_Request_Shortcode
                         <i class="fa-regular fa-comment"></i>
                         <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                             <?php
+                            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                             $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                           //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                             $comment_results = $this->wpdb->get_results($comment_query);
                             echo esc_html(count($comment_results));
                             ?>
@@ -395,30 +482,24 @@ class Features_Request_Shortcode
             wp_send_json_error("Nonce verification failed!");
             return;
         }
+       $table_name =  sanitize_key($this->table_name);
+       $table_name_2 =   sanitize_key($this->table_name_2);
+        
+        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.report_status = 'inprogress' AND t1.submit_privately != 'on'");
 
-        $query = $this->wpdb->prepare(" SELECT t1.*, 
-                COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-                COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-            FROM {$this->table_name} AS t1
-            LEFT JOIN (
-                SELECT report_table_id, 
-                    SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                    SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-                FROM {$this->table_name_2}
-                GROUP BY report_table_id
-            ) AS subquery ON t1.id = subquery.report_table_id
-            WHERE t1.report_status = %s
-            AND t1.submit_privately != %s
-        ", 'inprogress', 'on');
 
 
         // Execute the query and fetch the results
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
         ob_start();
         foreach ($fetch_results as $result):
             $insertion_time_str = $result->inserted_time;
+            //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             $current_date = date("Y-m-d");
+            //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             $insertion_date = date("Y-m-d", strtotime($insertion_time_str));
             ?>
             <li class="show_content_popup_btn" data-id="<?php echo esc_attr($result->id); ?>">
@@ -464,7 +545,9 @@ class Features_Request_Shortcode
                         <i class="fa-regular fa-comment"></i>
                         <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                             <?php
+                            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                             $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                           //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                             $comment_results = $this->wpdb->get_results($comment_query);
                             echo esc_html(count($comment_results));
                             ?>
@@ -491,28 +574,22 @@ class Features_Request_Shortcode
             return;
         }
 
-        $query = $this->wpdb->prepare(" SELECT t1.*, 
-                COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-                COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-            FROM {$this->table_name} AS t1
-            LEFT JOIN (
-                SELECT report_table_id, 
-                    SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                    SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-                FROM {$this->table_name_2}
-                GROUP BY report_table_id
-            ) AS subquery ON t1.id = subquery.report_table_id
-            WHERE t1.report_status = %s
-            AND t1.submit_privately != %s
-            ", 'done', 'on');
+$table_name = sanitize_key($this->table_name);
+$table_name_2 = sanitize_key($this->table_name_2);
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+$query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.report_status = 'done' AND t1.submit_privately != 'on'");
+
 
         // Execute the query and fetch the results
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
         ob_start();
         foreach ($fetch_results as $result):
             $insertion_time_str = $result->inserted_time;
+              //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             $current_date = date("Y-m-d");
+              //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             $insertion_date = date("Y-m-d", strtotime($insertion_time_str));
             ?>
             <li class="show_content_popup_btn" data-id="<?php echo esc_attr($result->id); ?>">
@@ -556,7 +633,9 @@ class Features_Request_Shortcode
                         <i class="fa-regular fa-comment"></i>
                         <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                             <?php
+                            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                             $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                          //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                             $comment_results = $this->wpdb->get_results($comment_query);
                             echo esc_html(count($comment_results));
                             ?>
@@ -587,25 +666,16 @@ class Features_Request_Shortcode
         $dataId = isset($_POST['dataId']) ? sanitize_text_field($_POST['dataId']) : "";
         $tabType = isset($_POST['tabType']) ? sanitize_text_field($_POST['tabType']) : "";
 
-        $query = $this->wpdb->prepare("
-        SELECT t1.*, 
-               COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-               COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-        FROM {$this->table_name} AS t1
-        LEFT JOIN (
-            SELECT report_table_id, 
-                   SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                   SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-            FROM {$this->table_name_2}
-            GROUP BY report_table_id
-        ) AS subquery ON t1.id = subquery.report_table_id
-        WHERE t1.id = %d
-    ", $dataId);
+        $table_name = sanitize_key($this->table_name);
+        $table_name_2 = sanitize_key($this->table_name_2);
+        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.id = %d", $dataId);
 
 
 
 
         // Execute the query and fetch the results
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $fetch_results = $this->wpdb->get_results($query);
 
 
@@ -669,8 +739,9 @@ class Features_Request_Shortcode
                 <div class="voted_done_and_counting_box">
                     <?php
                     if ($fetch_results[0]->report_type == "suggestion_submit"):
-
-                        $voting_query = $this->wpdb->prepare(" SELECT * FROM {$this->table_name_2} WHERE report_table_id = %d ", $fetch_results[0]->id);
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                        $voting_query = $this->wpdb->prepare(" SELECT * FROM $this->table_name_2 WHERE report_table_id = %d ", $fetch_results[0]->id);
+                        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                         $voting_results = $this->wpdb->get_results($voting_query);
                         $cookieValueId = isset($_COOKIE['voting_cookie_set']) ? $_COOKIE['voting_cookie_set'] : '';
                         ?>
@@ -749,7 +820,9 @@ class Features_Request_Shortcode
                 <ul class="push_comment_into_ul">
 
                     <?php
+                    //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                     $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $fetch_results[0]->id);
+                  //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                     $comment_results = $this->wpdb->get_results($query);
 
                     foreach ($comment_results as $comment_list):
@@ -794,7 +867,7 @@ class Features_Request_Shortcode
                                         // Get the difference in days and minutes
                                         $days = $interval->days;
                                         $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-                                        echo $comment_list->comment_time;
+                                        echo esc_html($comment_list->comment_time);
                                         ?>
                                     </span>
                                     <span class="comment_edit"
@@ -821,7 +894,9 @@ class Features_Request_Shortcode
 
                             <ul class="reply_comment_ul">
                                 <?php
-                                $commnet_reply_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d", $fetch_results[0]->id, $comment_list->comment_id);
+                                //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                $commnet_reply_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d" ,$fetch_results[0]->id, $comment_list->comment_id);
+                              //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                 $comment_reply_results = $this->wpdb->get_results($commnet_reply_query);
                                 foreach ($comment_reply_results as $comment_reply):
                                     ?>
@@ -849,7 +924,7 @@ class Features_Request_Shortcode
                                                     // Get the difference in days and minutes
                                                     $days = $interval->days;
                                                     $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-                                                    echo $comment_reply->comment_time;
+                                                    echo esc_html($comment_reply->comment_time);
                                                     ?>
                                                 </span>
                                                 <span class="comment_edit"
@@ -918,11 +993,14 @@ class Features_Request_Shortcode
             'vote_email' => $email_value,
         );
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $result = $this->wpdb->insert($this->table_name_2, $data);
         if ($result !== false)
         {
             setcookie("voting_cookie_set", $report_table_id_val, time() + (365 * 24 * 60 * 60), "/");
+            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $report_query = $this->wpdb->prepare("SELECT * FROM $this->table_name WHERE id = %d", $report_table_id_val);
+            //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $report_fetch_results = $this->wpdb->get_results($report_query);
 
             $get_voting_email_customer_enable_disable = get_option("voting_email_customer_enable_disable", "");
@@ -996,12 +1074,14 @@ class Features_Request_Shortcode
 
             
 
-            $query = $this->wpdb->prepare("SELECT 
-                    COUNT(CASE WHEN vote_ans = 'agree' THEN 1 END) AS agree_count,
-                    COUNT(CASE WHEN vote_ans = 'disagree' THEN 1 END) AS disagree_count
-                FROM $this->table_name_2 
-                WHERE report_table_id = %d
-            ", $report_table_id_val);
+                    // Sanitize the table name
+            $sanitized_table_name_2 = sanitize_key($this->table_name_2);
+
+            // Prepare the query
+            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $query = $this->wpdb->prepare("SELECT COUNT(CASE WHEN vote_ans = 'agree' THEN 1 END) AS agree_count, COUNT(CASE WHEN vote_ans = 'disagree' THEN 1 END) AS disagree_count FROM {$sanitized_table_name_2} WHERE report_table_id = %d", $report_table_id_val);
+
+            //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $fetch_results = $this->wpdb->get_results($query);
             $total_agree_voting = $fetch_results[0]->agree_count;
             $total_disagree_voting = $fetch_results[0]->disagree_count;
@@ -1040,10 +1120,13 @@ class Features_Request_Shortcode
         $cTextarea = isset($_POST['cTextarea']) ? sanitize_text_field($_POST['cTextarea']) : "";
         $report_table_id_val = isset($_POST['report_table_id_val']) ? sanitize_text_field($_POST['report_table_id_val']) : "";
         $commentId = isset($_POST['commentId']) ? sanitize_text_field($_POST['commentId']) : "";
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $report_query = $this->wpdb->prepare("SELECT * FROM $this->table_name WHERE id = %d", $report_table_id_val);
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $report_fetch_results = $this->wpdb->get_results($report_query);
+        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $comment_parent_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE comment_id = %d", $commentId);
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $comm_parent_fetch_results = $this->wpdb->get_results($comment_parent_query);
         if ($comment_type == "reply")
         {
@@ -1193,8 +1276,9 @@ class Features_Request_Shortcode
 
         if ($result !== false)
         {
-
+            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $report_table_id_val);
+            //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $fetch_results = $this->wpdb->get_results($query);
             ob_start();
             foreach ($fetch_results as $comment):
@@ -1267,7 +1351,9 @@ class Features_Request_Shortcode
                         <?php
                         $report_table_id = $comment->report_table_id;
                         $comment_id = $comment->comment_id;
+                        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                         $commnet_reply_query_store_comment = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d", $report_table_id, $comment_id);
+                      //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                         $comment_reply_results_for_store_comment = $this->wpdb->get_results($commnet_reply_query_store_comment);
                         foreach ($comment_reply_results_for_store_comment as $comment_reply):
                             ?>
@@ -1294,7 +1380,7 @@ class Features_Request_Shortcode
                                             // Get the difference in days and minutes
                                             $days = $interval->days;
                                             $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-                                            echo $comment_reply->comment_time;
+                                            echo esc_html($comment_reply->comment_time);
                                             ?>
                                         </span>
                                         <?php if ($requestFrom === "admin"): ?>
@@ -1328,7 +1414,9 @@ class Features_Request_Shortcode
                 </li>
 
                 <?php
+                //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $report_table_id);
+              //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                 $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
             endforeach;
             $comment_html = ob_get_clean();
@@ -1367,12 +1455,14 @@ class Features_Request_Shortcode
 
         if ($result != false)
         {
-            $vote_count_query = $this->wpdb->prepare("SELECT 
-            COUNT(CASE WHEN vote_ans = 'agree' THEN 1 END) AS agree_count,
-            COUNT(CASE WHEN vote_ans = 'disagree' THEN 1 END) AS disagree_count
-                FROM $this->table_name_2 
-                WHERE report_table_id = %d
-            ", $report_table_id_val);
+                        // Sanitize the table name
+            $sanitized_table_name_2 = sanitize_key($this->table_name_2);
+
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $vote_count_query = $this->wpdb->prepare("SELECT COUNT(CASE WHEN vote_ans = 'agree' THEN 1 END) AS agree_count, COUNT(CASE WHEN vote_ans = 'disagree' THEN 1 END) AS disagree_count FROM {$sanitized_table_name_2} WHERE report_table_id = %d", $report_table_id_val);
+
+            //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $vote_count_result = $this->wpdb->get_results($vote_count_query);
             $total_agree_voting = $vote_count_result[0]->agree_count;
             $total_disagree_voting = $vote_count_result[0]->disagree_count;
@@ -1381,8 +1471,9 @@ class Features_Request_Shortcode
             $get_voting_delete_customer_enable_disable = get_option("voting_delete_customer_enable_disable", "");
             $get_voting_delete_customer_subject = get_option("voting_delete_customer_subject", "");
             $get_voting_delete_customer_email_content = get_option("voting_delete_customer_email_content", "");
-    
-            $report_query = $this->wpdb->prepare("SELECT * FROM $this->table_name WHERE id = %d", $report_table_id_val);
+    //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $report_query = $this->wpdb->prepare("SELECT * FROM $this->table_name  WHERE id = %d", $report_table_id_val);
+            //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $report_fetch_results = $this->wpdb->get_results($report_query);
     
             $customer_voting_delete_message = str_replace(
@@ -1486,11 +1577,15 @@ class Features_Request_Shortcode
 
         if ($commenttype == "comment")
         {
+            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d AND comment_id= %d AND comment_email= %s", $report_table_id_val, $commentId, $comment_email);
+            //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $fetch_results = $this->wpdb->get_results($query);
         } else
         {
+            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d AND comment_email= %s", $report_table_id_val, $commentId, $comment_email);
+           //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $fetch_results = $this->wpdb->get_results($query);
         }
 
@@ -1514,8 +1609,9 @@ class Features_Request_Shortcode
         }
         $report_table_id_val = isset($_POST['reportId']) ? sanitize_text_field($_POST['reportId']) : "";
         $voting_email = isset($_POST['voting_email']) ? sanitize_text_field($_POST['voting_email']) : "";
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $voting_email_query = $this->wpdb->prepare("SELECT * FROM $this->table_name_2 WHERE report_table_id = %d AND vote_email= %s", $report_table_id_val, $voting_email);
+       //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $voting_email_result = $this->wpdb->get_results($voting_email_query);
         
 
@@ -1542,9 +1638,10 @@ class Features_Request_Shortcode
         $comment_email = isset($_POST['comment_email']) ? sanitize_text_field($_POST['comment_email']) : "";
         $textareaValue = isset($_POST['textareaValue']) ? sanitize_text_field($_POST['textareaValue']) : "";
         $nameValue = isset($_POST['nameValue']) ? sanitize_text_field($_POST['nameValue']) : "";
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $report_query = $this->wpdb->prepare("SELECT * FROM $this->table_name WHERE id = %d", $report_table_id_val);
-            $report_fetch_results = $this->wpdb->get_results($report_query);
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared   
+        $report_fetch_results = $this->wpdb->get_results($report_query);
 
         if ($commenttype == "comment")
         {
@@ -1627,8 +1724,9 @@ class Features_Request_Shortcode
             }
 
           
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $report_table_id_val);
+           //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $fetch_results = $this->wpdb->get_results($query);
             ob_start();
             foreach ($fetch_results as $comment):
@@ -1681,7 +1779,9 @@ class Features_Request_Shortcode
                         <?php
                         $report_table_id = $comment->report_table_id;
                         $comment_id = $comment->comment_id;
+                        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                         $commnet_reply_query_store_comment = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d", $report_table_id, $comment_id);
+                      //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                         $comment_reply_results_for_store_comment = $this->wpdb->get_results($commnet_reply_query_store_comment);
                         foreach ($comment_reply_results_for_store_comment as $comment_reply):
                             ?>
@@ -1708,7 +1808,7 @@ class Features_Request_Shortcode
                                             // Get the difference in days and minutes
                                             $days = $interval->days;
                                             $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-                                            echo $comment_reply->comment_time;
+                                            echo esc_html($comment_reply->comment_time);
                                             ?>
                                         </span>
 
@@ -1735,7 +1835,9 @@ class Features_Request_Shortcode
                 </li>
 
                 <?php
+                //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $report_table_id);
+               //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                 $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
             endforeach;
             $comment_html = ob_get_clean();
@@ -1760,9 +1862,10 @@ class Features_Request_Shortcode
         $commenttype = isset($_POST['commenttype']) ? sanitize_text_field($_POST['commenttype']) : "";
         $comment_email = isset($_POST['comment_email']) ? sanitize_text_field($_POST['comment_email']) : "";
         $requestFrom = isset($_POST['requestFrom']) ? sanitize_text_field($_POST['requestFrom']) : "";
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $report_query = $this->wpdb->prepare("SELECT * FROM $this->table_name WHERE id = %d", $report_table_id_val);
-            $report_fetch_results = $this->wpdb->get_results($report_query);
+        //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared  
+        $report_fetch_results = $this->wpdb->get_results($report_query);
         if ($commenttype == "comment")
         {
             $where = array(
@@ -1861,8 +1964,9 @@ class Features_Request_Shortcode
                     
                 }
             }
-
+//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $report_table_id_val);
+          //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $fetch_results = $this->wpdb->get_results($query);
             ob_start();
             foreach ($fetch_results as $comment):
@@ -1925,7 +2029,9 @@ class Features_Request_Shortcode
                         <?php
                         $report_table_id = $comment->report_table_id;
                         $comment_id = $comment->comment_id;
+                        //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                         $commnet_reply_query_store_comment = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d AND comment_table_id= %d", $report_table_id, $comment_id);
+                       //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                         $comment_reply_results_for_store_comment = $this->wpdb->get_results($commnet_reply_query_store_comment);
                         foreach ($comment_reply_results_for_store_comment as $comment_reply):
                             ?>
@@ -1952,7 +2058,7 @@ class Features_Request_Shortcode
                                             // Get the difference in days and minutes
                                             $days = $interval->days;
                                             $minutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-                                            echo $comment_reply->comment_time;
+                                            echo esc_html($comment_reply->comment_time);
                                             ?>
                                         </span>
 
@@ -1987,7 +2093,9 @@ class Features_Request_Shortcode
                 </li>
 
                 <?php
+                //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $report_table_id);
+              //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                 $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
             endforeach;
             $comment_html = ob_get_clean();

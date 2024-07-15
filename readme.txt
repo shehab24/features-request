@@ -1,9 +1,9 @@
-=== Block Directory - Block Directory Block ===
-Contributors: abuhayat, charlescormier
+=== Features Request ===
+Contributors: abuhayat, shehab24
 Donate link: https://gum.co/wpdonate/
-Tags: block, key1, key2, key3, Gutenberg block
+Tags: request, Request Features, Gutenberg block
 Requires at least: 5.0+
-Tested up to: 6.3.1
+Tested up to: 6.5
 Stable tag: 1.0.0
 Requires PHP: 7.1
 License: GPLv3 or later
@@ -24,8 +24,8 @@ Large Description
 
 
 = How to use =
-- First, install the Block Directory plugin
-- Add the Block Directory block from the block category called "Widgets" in Gutenberg editor.
+- First, install the Features Request plugin
+- Add the Features Request block from the block category called "Widgets" in Gutenberg editor.
 - You can change block settings from the right-side settings sidebar.
 - Enjoy!
 
@@ -33,7 +33,7 @@ Large Description
 
 
 = Feedback =
-- Did you like this plugin? Dislike it? Have a feature request? [Please share your feedback with us](mailto:support@bplugins.com 'Send feedback')
+- Did you like this plugin? Dislike it? Have a feature request? [Please share your feedback with us](mailto:support@indione.com 'Send feedback')
 
 
 = ⭐ Check out the Parent Plugin of this plugin- =
@@ -51,32 +51,31 @@ Large Description
 
 🔥 **[StreamCast](https://wordpress.org/plugins/streamcast)** – A fully-featured Radio Player Plugin for WordPress.
 
-🔥 **[3D Viewer](https://3d-viewer.bplugins.com/)** – Display interactive 3D models on the webs.
 
 
 == Installation ==
 
 = From Gutenberg Editor: =
 1. Go to the WordPress Block/Gutenberg Editor
-2. Search For **Block Directory**
-3. Click on the **Block Directory** to add the block
+2. Search For **Features Request**
+3. Click on the **Features Request** to add the block
 
 = Download & Upload: =
-1. Download the **Block Directory** plugin (*.zip file*)
+1. Download the **Features Request** plugin (*.zip file*)
 2. In your admin area, go to the Plugins menu and click on **Add New**
-3. Click on **Upload Plugin** and choose the **`plugin-slug.zip`** file and click on **Install Now**
+3. Click on **Upload Plugin** and choose the **`features-request.zip`** file and click on **Install Now**
 4. Activate the plugin and Enjoy!
 
 = Manually: =
-1. Download and upload the **Block Directory** plugin to the **`/wp-content/plugins/`** directory
+1. Download and upload the **Features Request** plugin to the **`/wp-content/plugins/`** directory
 2. Activate the plugin through the Plugins menu in WordPress
 
 
 == Frequently Asked Questions ==
 
-= Is Block Directory free? =
+= Is Features Request free? =
 
-Yes, Block Directory is a free Gutenberg block plugin.
+Yes, Features Request is a free Gutenberg block plugin.
 
 = Does it work with any WordPress theme? =
 
@@ -97,7 +96,7 @@ You can post your questions on the [support forum here](https://wordpress.org/su
 
 == Screenshots ==
 
-1. Block Directory
+1. Features Request
 2. Settings
 
 

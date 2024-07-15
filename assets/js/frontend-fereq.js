@@ -398,6 +398,10 @@ jQuery(document).ready(function ($) {
                 $("p.submisson_msg").text("Issues submitted successfully").addClass("success").delay(2000).fadeOut(100);
                 setTimeout(function() {
                   $("div.popup_for_add_data").removeClass('model-open');
+                  get_store_explore_data_from_database();
+                  get_store_inprogress_data_from_database();
+                  get_store_done_data_from_database();
+                  window.location.reload();
               }, 2000);
               
                 $('form#issues_form')[0].reset();
@@ -439,6 +443,11 @@ jQuery(document).ready(function ($) {
                 $("p.for_suggestion").text("Suggestion submitted successfully").addClass("success").delay(2000).fadeOut(100);
                 setTimeout(function() {
                   $("div.popup_for_add_data").removeClass('model-open');
+                  get_store_explore_data_from_database();
+                  get_store_inprogress_data_from_database();
+                  get_store_done_data_from_database();
+                  window.location.reload();
+                  
               }, 2000);
                 $('form#suggestion_form')[0].reset();
                 get_store_explore_data_from_database();

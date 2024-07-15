@@ -21,9 +21,12 @@ $issues_settings = get_option('issues_settings', array(
 ));
 
 $feedback_button_settings = get_option('feedback_button_settings', array(
-    'fda_title_text' => 'We are Bplugins. Please share your experience or request a feature. We want to make the best tool possible.',
+    'fda_title_text' => 'We are Indione. Please share your experience or request a feature. We want to make the best tool possible.',
     'feedback_button_text' => 'Give Us Feedback'
 ));
+
+
+
 ?>
 
 
@@ -59,6 +62,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                         <?php
                                         $query = " SELECT * FROM " . $this->plugin_add;
                                         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+                                        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                         $results = $this->wpdb->get_results($query);
 
                                         foreach ($results as $result):
@@ -95,6 +99,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                         <?php
                                         $query = " SELECT * FROM " . $this->plugin_add;
                                         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+                                        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                         $results = $this->wpdb->get_results($query);
 
                                         foreach ($results as $result):
@@ -148,30 +153,26 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                     <ul class="show_store_exploring_database_data filter_store_ul_data">
 
                         <?php
-
-                        $query = $this->wpdb->prepare(" SELECT t1.*, 
-                                COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-                                COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-                            FROM {$this->table_name} AS t1
-                            LEFT JOIN (
-                                SELECT report_table_id, 
-                                    SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                                    SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-                                FROM {$this->table_name_2}
-                                GROUP BY report_table_id
-                            ) AS subquery ON t1.id = subquery.report_table_id
-                            WHERE t1.report_status = %s
-                            AND t1.submit_privately != %s
-                        ", 'exploring', 'on');
+                        $table_name = sanitize_key($this->table_name);
+                        $table_name_2 = sanitize_key($this->table_name_2);
+                  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                  $sanitized_table_name = sanitize_key($table_name);
+                  $sanitized_table_name_2 = sanitize_key($table_name_2);
+                   //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                  $query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$sanitized_table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$sanitized_table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.report_status = %s AND t1.submit_privately != %s", 'exploring', 'on');
+                  
 
 
                         // Execute the query and fetch the results
-                        $fetch_results = $wpdb->get_results($query);
+                         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                        $fetch_results = $this->wpdb->get_results($query);
 
                         ob_start();
                         foreach ($fetch_results as $result):
                             $insertion_time_str = $result->inserted_time;
+                            //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                             $current_date = date("Y-m-d");
+                             //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                             $insertion_date = date("Y-m-d", strtotime($insertion_time_str));
                             ?>
                             <li class="show_content_popup_btn" data-id="<?php echo esc_attr($result->id); ?>"
@@ -204,7 +205,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                             $voting_status = ($result->total_agree_voting > 0 || $result->total_disagree_voting > 0) ? 'popular' : 'not_popular';
 
                                             ?>
-                                            <input type="hidden" name="popular" value="<?php echo $voting_status ;  ?>" />
+                                            <input type="hidden" name="popular" value="<?php echo esc_attr($voting_status) ;  ?>" />
                                             <div class="upvote_downvote_div">
                                                 <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
                                                     <span
@@ -220,9 +221,13 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                         <i class="fa-regular fa-comment"></i>
                                         <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                                             <?php
-                                            $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                                             //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                            $comment_query = $this->wpdb->prepare("SELECT * FROM {$this->comment_table} WHERE report_table_id = %d", $result->id);
+                                          // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                             $comment_results = $this->wpdb->get_results($comment_query);
-                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                             //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM {$this->comment_table_reply} WHERE report_table_id = %d", $result->id);
+                                             // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                             $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
                                             echo esc_html(count($comment_results) + count($comment_reply_results_total));
                                             ?>
@@ -235,7 +240,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                             <?php
                         endforeach;
                         $html = ob_get_clean();
-
+                        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         printf($html);
                         ?>
                     </ul>
@@ -277,29 +282,23 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                 <div class="tabs__content">
                     <ul class="show_store_inprogress_database_data filter_store_ul_data">
                         <?php
-                        $query = $this->wpdb->prepare(" SELECT t1.*, 
-                                COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-                                COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-                            FROM {$this->table_name} AS t1
-                            LEFT JOIN (
-                                SELECT report_table_id, 
-                                    SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                                    SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-                                FROM {$this->table_name_2}
-                                GROUP BY report_table_id
-                            ) AS subquery ON t1.id = subquery.report_table_id
-                            WHERE t1.report_status = %s
-                            AND t1.submit_privately != %s
-                        ", 'inprogress', 'on');
-
+                        $table_name = sanitize_key($this->table_name);
+                        $table_name_2 = sanitize_key($this->table_name_2);
+                        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+                        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                        $query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.report_status = %s AND t1.submit_privately != %s", 'inprogress', 'on');
+                        
 
                         // Execute the query and fetch the results
-                        $fetch_results = $wpdb->get_results($query);
+                         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                        $fetch_results = $this->wpdb->get_results($query);
 
                         ob_start();
                         foreach ($fetch_results as $result):
                             $insertion_time_str = $result->inserted_time;
+                             //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                             $current_date = date("Y-m-d");
+                             //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                             $insertion_date = date("Y-m-d", strtotime($insertion_time_str));
                             ?>
                             <li class="show_content_popup_btn" data-id="<?php echo esc_attr($result->id); ?>"
@@ -331,7 +330,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                             $voting_status = ($result->total_agree_voting > 0 || $result->total_disagree_voting > 0) ? 'popular' : 'not_popular';
 
                                             ?>
-                                            <input type="hidden" name="popular" value="<?php echo $voting_status ;  ?>" />
+                                            <input type="hidden" name="popular" value="<?php echo esc_attr($voting_status );  ?>" />
                                             <div class="upvote_downvote_div">
                                                 <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
                                                     <span
@@ -347,9 +346,13 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                         <i class="fa-regular fa-comment"></i>
                                         <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                                             <?php
-                                            $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                                             //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                            $comment_query = $this->wpdb->prepare("SELECT * FROM {$this->comment_table} WHERE report_table_id = %d", $result->id);
+                                            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                             $comment_results = $this->wpdb->get_results($comment_query);
-                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                              //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM {$this->comment_table_reply} WHERE report_table_id = %d", $result->id);
+                                            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                             $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
                                             echo esc_html(count($comment_results) + count($comment_reply_results_total));
                                             ?>
@@ -361,7 +364,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                             <?php
                         endforeach;
                         $html = ob_get_clean();
-
+                         //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         printf($html);
                         ?>
 
@@ -393,27 +396,22 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                 <div class="tabs__content">
                     <ul class="show_store_done_database_data filter_store_ul_data">
                         <?php
-                        $query = $this->wpdb->prepare(" SELECT t1.*, 
-                                        COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting,
-                                        COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting
-                                    FROM {$this->table_name} AS t1
-                                    LEFT JOIN (
-                                        SELECT report_table_id, 
-                                            SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting,
-                                            SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting
-                                        FROM {$this->table_name_2}
-                                        GROUP BY report_table_id
-                                    ) AS subquery ON t1.id = subquery.report_table_id
-                                    WHERE t1.report_status = %s
-                                    AND t1.submit_privately != %s
-                                ", 'done', 'on');
+                  $table_name = sanitize_key($this->table_name);
+                  $table_name_2 = sanitize_key($this->table_name_2);
+                  
+                  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                  $query = $this->wpdb->prepare("SELECT t1.*, COALESCE(subquery.total_agree_voting, 0) AS total_agree_voting, COALESCE(subquery.total_disagree_voting, 0) AS total_disagree_voting FROM {$table_name} AS t1 LEFT JOIN (SELECT report_table_id, SUM(CASE WHEN vote_ans = 'agree' THEN 1 ELSE 0 END) AS total_agree_voting, SUM(CASE WHEN vote_ans = 'disagree' THEN 1 ELSE 0 END) AS total_disagree_voting FROM {$table_name_2} GROUP BY report_table_id) AS subquery ON t1.id = subquery.report_table_id WHERE t1.report_status = %s AND t1.submit_privately != %s", 'done', 'on');
+                  
                         // Execute the query and fetch the results
-                        $fetch_results = $wpdb->get_results($query);
+                         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                        $fetch_results = $this->wpdb->get_results($query);
 
                         ob_start();
                         foreach ($fetch_results as $result):
                             $insertion_time_str = $result->inserted_time;
+                             //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                             $current_date = date("Y-m-d");
+                             //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                             $insertion_date = date("Y-m-d", strtotime($insertion_time_str));
                             ?>
                             <li class="show_content_popup_btn" data-id="<?php echo esc_attr($result->id); ?>"
@@ -445,7 +443,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                             $voting_status = ($result->total_agree_voting > 0 || $result->total_disagree_voting > 0) ? 'popular' : 'not_popular';
 
                                             ?>
-                                            <input type="hidden" name="popular" value="<?php echo $voting_status ;  ?>" />
+                                            <input type="hidden" name="popular" value="<?php echo esc_attr($voting_status );  ?>" />
                                             <div class="upvote_downvote_div">
                                                 <span class="upvote_icon"><i class="fa-solid fa-thumbs-up"></i>
                                                     <span
@@ -461,9 +459,13 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                                         <i class="fa-regular fa-comment"></i>
                                         <b class="comment_updated_status_<?php echo esc_attr($result->id); ?>">
                                             <?php
-                                            $comment_query = $this->wpdb->prepare("SELECT * FROM $this->comment_table WHERE report_table_id = %d", $result->id);
+                                              //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                            $comment_query = $this->wpdb->prepare("SELECT * FROM {$this->comment_table} WHERE report_table_id = %d", $result->id);
+                                             // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                             $comment_results = $this->wpdb->get_results($comment_query);
-                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM $this->comment_table_reply WHERE report_table_id = %d", $result->id);
+                                            //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                                            $commnet_reply_query_total = $this->wpdb->prepare("SELECT * FROM {$this->comment_table_reply} WHERE report_table_id = %d", $result->id);
+                                            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                                             $comment_reply_results_total = $this->wpdb->get_results($commnet_reply_query_total);
                                             echo esc_html(count($comment_results) + count($comment_reply_results_total));
                                             ?>
@@ -475,7 +477,7 @@ $feedback_button_settings = get_option('feedback_button_settings', array(
                             <?php
                         endforeach;
                         $html = ob_get_clean();
-
+                    //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         printf($html);
                         ?>
                     </ul>

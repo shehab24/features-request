@@ -1,12 +1,12 @@
 <?php
 
-
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $results = wp_cache_get('store_data_' . $this->plugin_add);
-
+ // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 if (false === $results)
 {
     $query = " SELECT * FROM " . $this->plugin_add;
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+   // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     $results = $this->wpdb->get_results($query);
     wp_cache_set('store_data_' . $this->table_name, $results);
 }

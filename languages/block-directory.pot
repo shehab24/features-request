@@ -1,4 +1,4 @@
-# Copyright (C) 2024 bPlugins LLC
+# Copyright (C) 2024 indione LLC
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-14T04:51:04+02:00\n"
+"POT-Creation-Date: 2024-05-27T18:36:41+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: features-request\n"
 
 #. Plugin Name of the plugin
-#: inc/class-fereq-admin-menu-add.php:86
-#: inc/class-fereq-admin-menu-add.php:87
+#: inc/class-fereq-admin-menu-add.php:89
+#: inc/class-fereq-admin-menu-add.php:90
 msgid "Features Request"
 msgstr ""
 
@@ -25,48 +25,62 @@ msgid "Using this you can share your experience or request a feature."
 msgstr ""
 
 #. Author of the plugin
-msgid "bPlugins LLC"
+msgid "indione LLC"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "http://bplugins.com"
+msgid "http://indione.com"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:237
-#: inc/class-fereq-admin-menu-add.php:418
+#: inc/class-fereq-admin-menu-add.php:179
+msgid "Style Settings"
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:258
+msgid "Style settings for the Features Request plugin."
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:299
+#: inc/class-fereq-admin-menu-add.php:307
+msgid "Set the font size in pixels."
+msgstr ""
+
+#: inc/class-fereq-admin-menu-add.php:387
 #: inc/settings_file/list-plugin-settings.php:25
 msgid "Serial No"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:240
+#: inc/class-fereq-admin-menu-add.php:390
 msgid "Report Type"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:243
+#: inc/class-fereq-admin-menu-add.php:393
 msgid "Report Title"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:246
+#: inc/class-fereq-admin-menu-add.php:396
 msgid "Report Email"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:249
+#: inc/class-fereq-admin-menu-add.php:399
 msgid "Reported Plugin"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:252
+#: inc/class-fereq-admin-menu-add.php:402
 msgid "Report Status"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:255
-#: inc/class-fereq-admin-menu-add.php:424
+#: inc/class-fereq-admin-menu-add.php:405
 #: inc/settings_file/list-plugin-settings.php:31
 msgid "Action"
 msgstr ""
 
-#: inc/class-fereq-admin-menu-add.php:421
+#: inc/settings_file/advanced-settings.php:4
+msgid "Settings Saved"
+msgstr ""
+
 #: inc/settings_file/list-plugin-settings.php:28
-msgid "Plugin Name"
+msgid "Product Name"
 msgstr ""
 
 #: dist/editor.js:1
