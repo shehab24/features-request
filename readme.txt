@@ -1,5 +1,5 @@
 === Features Request ===
-Contributors: abuhayat, shehab24
+Contributors: indionetech, shehab24
 Donate link: https://gum.co/wpdonate/
 Tags: request, Request Features, Gutenberg block
 Requires at least: 5.0+
@@ -110,3 +110,15 @@ You can post your questions on the [support forum here](https://wordpress.org/su
 
 = 1.0.0 =
 * Initial Release
+
+== External Service Integration ==
+
+* Public source code GitHub link for review, study, and contribute.
+
+https://github.com/shehab24/store-finder
+
+* Sweet alert 
+https://sweetalert2.github.io/
+https://cdn.jsdelivr.net/npm/sweetalert2/
+
+For more information on how to contribute to this plugin, please visit our GitHub repository.
